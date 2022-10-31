@@ -2,7 +2,6 @@ import com.soywiz.kmem.*
 import com.soywiz.korev.*
 import com.soywiz.korge.baseview.*
 import com.soywiz.korge.component.*
-import com.soywiz.korge.input.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korma.geom.*
@@ -10,18 +9,16 @@ import com.soywiz.korma.geom.vector.*
 import kotlin.math.*
 
 fun Container.addTouchGamepad(
-    width: Double = 320.0,
-    height: Double = 224.0,
+    width: Double = 800.0,
+    height: Double = 1440.0,
     radius: Double = height / 8,
     onStick: (x: Double, y: Double) -> Unit = { _, _ -> },
-    onButton: (button: Int, pressed: Boolean) -> Unit = { _, _ -> }
 ) {
     val view = this
     lateinit var ball: View
-    val diameter = radius * 2
 
     container {
-        position(radius * 1.1, height - radius * 1.1)
+        position(width / 2.0, height - radius * 1.1)
         graphics {
             fill(Colors.BLACK) { circle(0.0, 0.0, radius) }
             alpha(0.2)
@@ -29,33 +26,6 @@ fun Container.addTouchGamepad(
         ball = graphics {
             fill(Colors.WHITE) { circle(0.0, 0.0, radius * 0.7) }
             alpha(0.2)
-        }
-    }
-
-    fun <T : View> T.decorateButton(button: Int) = this.apply {
-        var pressing = false
-        touch {
-            onDown {
-                pressing = true
-                alpha = 0.3
-                onButton(button, true)
-            }
-            onUpAnywhere {
-                if (pressing) {
-                    pressing = false
-                    alpha = 0.2
-                    onButton(button, false)
-                }
-            }
-        }
-    }
-
-    for (n in 0 until 2) {
-        graphics {
-            position(width - radius * 1.1 - (diameter * n), height - radius * 1.1)
-            fill(Colors.WHITE) { circle(0.0, 0.0, radius * 0.7) }
-            alpha(0.2)
-            decorateButton(n)
         }
     }
 
