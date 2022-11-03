@@ -17,6 +17,9 @@ apply<KorgeGradlePlugin>()
 
 korge {
 	id = "com.survivor.survivor"
+    name = "Survivor"
+    orientation = Orientation.PORTRAIT
+    androidManifestChunk("android:screenOrientation=\"portrait\"")
 	//supportBox2d()
 // To enable all targets at once
 
