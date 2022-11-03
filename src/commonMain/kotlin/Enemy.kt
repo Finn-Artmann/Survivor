@@ -38,8 +38,8 @@ class Enemy : Container(){
             anchorX = .5
         )
 
-        hitShape { circle { radius = 80.0 } }
-        //hitShape2d = Shape2d.Circle(100.0 / 2, 100.0 / 2, 100.0 / 2)
+        //hitShape { circle { radius = 80.0 } }
+        hitShape2d = Shape2d.Circle(100.0 / 2, 100.0 / 2, 100.0)
 
 
         addChild(idle)

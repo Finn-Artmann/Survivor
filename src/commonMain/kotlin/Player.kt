@@ -1,6 +1,7 @@
 
 import com.soywiz.korau.sound.*
 import com.soywiz.korge.view.*
+import com.soywiz.korim.color.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
@@ -22,10 +23,14 @@ class Player : Container(){
     lateinit var damageSound: Sound
     lateinit var state: State
     lateinit var soundChannel: SoundChannel
+    lateinit var healthBar: HealthBar
+
 
     var moveSpeed = 600.0
     var moveX = 0.0
     var moveY = 0.0
+    var health = 100.0
+    var maxHealth = 100.0
 
     suspend fun loadPlayer(initialXPos: Double, initialYPos: Double) {
         position(initialXPos, initialYPos)
@@ -38,13 +43,16 @@ class Player : Container(){
             anchorX = .5
         )
 
-        hitShape { circle { radius = 30.0 } }
-        //hitShape2d = Shape2d.Circle(48.0 /2 , 48.0 /2, 48.0 /2)
+        healthBar = HealthBar(30.0).centerXOn(this).positionY(height + 20.0)
+
+
+        //hitShape { circle { radius = 30.0 } }
+        hitShape2d = Shape2d.Circle(48.0 /2 , 48.0 /2, 48.0)
         //var c = circle(48.0 /2).center()
 
 
         addChild(idle)
-
+        addChild(healthBar)
     }
 
 

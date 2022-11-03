@@ -66,7 +66,7 @@ class GameScene : Scene() {
 
     override suspend fun sceneAfterInit() {
         super.sceneAfterInit()
-        backgroundMusic =  resourcesVfs["!SFX + MUSIC!/Audio/Simple Music/DeepSpaceA.mp3"].readMusic().playForever()
+        //backgroundMusic =  resourcesVfs["!SFX + MUSIC!/Audio/Simple Music/DeepSpaceA.mp3"].readMusic().playForever()
         spawnEnemies(6)
     }
 
@@ -85,6 +85,8 @@ class GameScene : Scene() {
                 CoroutineScope(coroutineContext).launchImmediately {
                     player.damageSound.play()
                 }
+                player.health--;
+                player.healthBar.setHealth(player.health, player.maxHealth)
             }
 
             if(abs(enemy.x - player.x) >= cleanupDist || abs(enemy.y - player.y) >= cleanupDist){
