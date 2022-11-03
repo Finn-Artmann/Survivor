@@ -41,7 +41,7 @@ fun Container.addTouchGamepad(
 
             when (e.type) {
                 TouchEvent.Type.START -> {
-                    if (px >= width / 2) return
+                    if (px >= height / 2) return
                     start.x = px
                     start.y = py
                     ball.alpha = 0.3
