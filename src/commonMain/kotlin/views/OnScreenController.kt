@@ -1,3 +1,5 @@
+package views
+
 import com.soywiz.kmem.*
 import com.soywiz.korev.*
 import com.soywiz.korge.baseview.*

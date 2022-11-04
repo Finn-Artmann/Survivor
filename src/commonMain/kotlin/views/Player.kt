@@ -1,14 +1,9 @@
-
+package views
 import com.soywiz.korau.sound.*
 import com.soywiz.korge.view.*
-import com.soywiz.korim.color.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
-import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.shape.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.GlobalScope
-
 
 
 class Player : Container(){

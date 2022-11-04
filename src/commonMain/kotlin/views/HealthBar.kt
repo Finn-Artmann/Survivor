@@ -1,3 +1,5 @@
+package views
+
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 
