@@ -7,6 +7,9 @@ class HealthBar(val hwidth: Double) : Container() {
     val healthBar = solidRect(hwidth, 3.0, Colors.GREEN)
 
     fun setHealth(health: Double, maxHealth: Double){
-        healthBar.scaledWidth = (health /  maxHealth) * hwidth
+        if(health <= 0)
+            healthBar.scaledWidth = 0.0
+        else
+            healthBar.scaledWidth = (health /  maxHealth) * hwidth
     }
 }

@@ -42,6 +42,7 @@ class GameScene : Scene() {
     private lateinit var backgroundMusic: SoundChannel
     private val enemies: MutableList<Enemy> = mutableListOf()
     private val cleanupDist = 2000.0
+    private val waveGen = WaveGenerator(this, enemies)
 
 
 	override suspend fun Container.sceneInit() {
@@ -66,14 +67,15 @@ class GameScene : Scene() {
 
     override suspend fun sceneAfterInit() {
         super.sceneAfterInit()
-        //backgroundMusic =  resourcesVfs["!SFX + MUSIC!/Audio/Simple Music/DeepSpaceA.mp3"].readMusic().playForever()
-        spawnEnemies(6)
+        backgroundMusic =  resourcesVfs["!SFX + MUSIC!/Audio/Simple Music/DeepSpaceA.mp3"].readMusic().playForever()
+        waveGen.spawnEnemies(2)
     }
 
     private fun update(dt : TimeSpan){
 
         playerControl(dt)
         enemiesUpdater(dt)
+        waveGen.checkNextWave(dt)
     }
 
     private fun enemiesUpdater(dt: TimeSpan){
@@ -85,7 +87,7 @@ class GameScene : Scene() {
                 CoroutineScope(coroutineContext).launchImmediately {
                     player.damageSound.play()
                 }
-                player.health--;
+                if(player.health > 0) {player.health--}
                 player.healthBar.setHealth(player.health, player.maxHealth)
             }
 
@@ -141,87 +143,9 @@ class GameScene : Scene() {
 
     }
 
-    private fun randPointLeft(margin: Double) :Point{
-        return Point(
-            Random.nextDouble(-margin,  -0.0),
-            Random.nextDouble(-margin, views.virtualHeight.toDouble() + margin)
-        )
-    }
-
-    private fun randPointRight(margin: Double) :Point{
-        return Point(
-            Random.nextDouble(views.virtualWidth.toDouble() , views.virtualWidth.toDouble() + margin),
-            Random.nextDouble(-margin, views.virtualHeight.toDouble() + margin)
-        )
-    }
-
-    private fun randPointTop(margin: Double) :Point{
-        return Point(
-            Random.nextDouble(-margin,  views.virtualWidth.toDouble() + margin),
-            Random.nextDouble(-margin, 0.0)
-        )
-    }
-
-    private fun randPointBottom(margin: Double) :Point{
-        return Point(
-            Random.nextDouble(-margin, views.virtualWidth.toDouble() + margin),
-            Random.nextDouble(views.virtualHeight.toDouble(), views.virtualHeight.toDouble() + margin)
-        )
-    }
 
 
-    private fun generateEnemyPoints() : Pair<Point, Point> {
 
-        lateinit var spawnPoint: Point
-        lateinit var movePoint: Point
-        val margin = 40.0
-        val randSide = Random.nextInt(0, 3)
-
-
-        when(randSide){
-
-            // Right
-            0 -> {
-                spawnPoint = randPointRight(margin)
-                movePoint = randPointLeft(margin)
-            }
-
-            // Bottom
-            1 -> {
-                spawnPoint = randPointBottom(margin)
-                movePoint = randPointTop(margin)
-            }
-
-            // Left
-            2 -> {
-                spawnPoint = randPointLeft(margin)
-                movePoint = randPointRight(margin)
-            }
-
-            // Top
-            3 -> {
-                spawnPoint = randPointTop(margin)
-                movePoint = randPointBottom(margin)
-            }
-        }
-
-
-        return Pair(spawnPoint, movePoint)
-    }
-
-    private fun spawnEnemies(count: Int){
-
-        for(i in 0..count-1){
-            enemies.add(i ,Enemy())
-
-            CoroutineScope(coroutineContext).launch{
-                val points = generateEnemyPoints()
-                enemies[i].loadEnemy(points.first)
-                enemies[i].setGoal(points.second)
-            }
-            sceneView.addChild(enemies[i])
-        }
-    }
 
 }
 
