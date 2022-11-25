@@ -2,47 +2,38 @@ package com.example.space_survivor
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.space_survivor.databinding.ActivityMainBinding
-import com.soywiz.korge.android.KorgeAndroidView
+import com.example.space_survivor.databinding.GameActivityBinding
 
-class MainActivity : AppCompatActivity() {
+import com.soywiz.korge.android.KorgeAndroidView
+import space_survivor.CustomModule
+
+class GameActivity : AppCompatActivity() {
 
     private lateinit var korgeAndroidView: KorgeAndroidView
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: GameActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = GameActivityBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
         korgeAndroidView = KorgeAndroidView(this)
         binding.toolContainer.addView(korgeAndroidView)
 
-        binding.loadViewButton.setOnClickListener {
-            binding.loadViewButton.isEnabled = false
-            binding.unloadViewButton.isEnabled = true
-            loadToolModule()
-        }
-
-        binding.unloadViewButton.setOnClickListener {
-            binding.loadViewButton.isEnabled = true
-            binding.unloadViewButton.isEnabled = false
-            unloadToolModule()
-        }
+        loadToolModule()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.loadViewButton.isEnabled = true
-        binding.unloadViewButton.isEnabled = false
+
 
     }
 
     override fun onPause() {
         super.onPause()
-        unloadToolModule()
+        //unloadToolModule()
     }
 
     private fun loadToolModule() {

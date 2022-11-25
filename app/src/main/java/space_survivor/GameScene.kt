@@ -41,10 +41,13 @@ class GameScene : Scene() {
     private lateinit var tilemap: TileMap
     private lateinit var player: Player
     private lateinit var joystick_text: TextOld
+    private lateinit var timer_text: Text
     private lateinit var backgroundMusic: SoundChannel
     private val enemies: MutableList<Enemy> = mutableListOf()
     private val cleanupDist = 2000.0
     private val waveGen = WaveGenerator(this, enemies)
+    private var timer = 0.minutes
+
 
 
     override suspend fun Container.sceneInit() {
@@ -58,6 +61,7 @@ class GameScene : Scene() {
         addChild(player)
 
         joystick_text = textOld("-").position(5, 5).apply { filtering = false }
+        timer_text = text("$timer").position((views.virtualWidth / 2 ), 5).centerXOnStage().apply {textSize = 50.0 }
 
 
         addTouchGamepad(
@@ -78,6 +82,11 @@ class GameScene : Scene() {
         playerControl(dt)
         enemiesUpdater(dt)
         waveGen.checkNextWave(dt)
+
+        // Update timer
+        timer += dt
+        timer_text.setText("${ISO8601.TIME_LOCAL_COMPLETE.format(timer)}")
+        timer_text.centerXOnStage()
     }
 
     private fun enemiesUpdater(dt: TimeSpan){

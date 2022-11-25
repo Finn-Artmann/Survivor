@@ -1,5 +1,6 @@
-package com.example.space_survivor
+package space_survivor
 
+import com.example.space_survivor.GameScene
 import com.soywiz.korge.scene.Module
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korinject.AsyncInjector
@@ -23,6 +24,6 @@ class CustomModule(private val width: Int = DEFAULT_WIDTH, private val height: I
     override val mainScene: KClass<out Scene> = GameScene::class
 
     override suspend fun AsyncInjector.configure() {
-        mapPrototype {GameScene() }
+        mapPrototype { GameScene() }
     }
 }
