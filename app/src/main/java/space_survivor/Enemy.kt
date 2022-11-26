@@ -4,13 +4,16 @@ package com.example.space_survivor
 import com.soywiz.klock.*
 import com.soywiz.korau.sound.*
 import com.soywiz.korge.view.*
+import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.*
 import com.soywiz.korma.geom.shape.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlin.math.*
 
 class Enemy : Container(){
@@ -40,9 +43,15 @@ class Enemy : Container(){
             anchorX = .5
         )
 
-        //hitShape { circle { radius = 80.0 } }
-        hitShape2d = Shape2d.Circle(100.0 / 2, 100.0 / 2, 100.0)
+        var hitRadius = 60.0
+        hitShape { Shape2d.Circle(hitRadius /2 , hitRadius /2, hitRadius) }
+        var circ = circle{ radius = hitRadius; fill = Colors.RED}
+        circ.x = -hitRadius
+        circ.y = -hitRadius
 
+
+
+        addChild(circ)
 
         addChild(idle)
 

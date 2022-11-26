@@ -1,6 +1,7 @@
 package com.example.space_survivor
 
 
+import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -8,16 +9,19 @@ import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.shape.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.GlobalScope
-
+import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.coroutineContext
 
 
 class Player : Container(){
 
     enum class State{
         IDLE,
-        MOVING
+        MOVING,
+        DAMAGED
     }
 
     private lateinit var idle: Image
@@ -48,16 +52,43 @@ class Player : Container(){
 
         healthBar = HealthBar(30.0).centerXOn(this).positionY(height + 20.0)
 
+        var hitRadius = 13.0
+        hitShape { Shape2d.Circle(hitRadius /2 , hitRadius /2, hitRadius) }
+        var circ = circle{ radius = hitRadius; fill = Colors.RED}
+        circ.x = -hitRadius
+        circ.y = -hitRadius
 
-        //hitShape { circle { radius = 30.0 } }
-        hitShape2d = Shape2d.Circle(48.0 /2 , 48.0 /2, 48.0)
-        //var c = circle(48.0 /2).center()
 
+        onCollision {
+
+            if (it is Enemy){
+                takeDamage(1.0)
+            }
+
+
+        }
 
         addChild(idle)
         addChild(healthBar)
     }
 
+    fun takeDamage(damage: Double){
+        if(state != State.IDLE) return;
+        state = State.DAMAGED
+        if(health > 0) {health -= damage}
+        healthBar.setHealth(health, maxHealth)
+
+
+        GlobalScope.launch{
+
+            damageSound.play()  //TODO - fix sound playing
+
+            idle.colorMul = Colors.RED
+            delay(0.1.seconds)
+            idle.colorMul = Colors.WHITE
+            state = State.IDLE
+        }
+    }
 
     fun isMoving() : Boolean{
 

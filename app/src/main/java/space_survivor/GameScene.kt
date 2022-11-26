@@ -94,14 +94,6 @@ class GameScene : Scene() {
         enemies.forEach { enemy ->
             enemy.moveInGoalDirection(dt)
 
-            if(enemy.collidesWith(player, CollisionKind.SHAPE)){
-                CoroutineScope(coroutineContext).launchImmediately {
-                    player.damageSound.play()
-                }
-                if(player.health > 0) {player.health--}
-                player.healthBar.setHealth(player.health, player.maxHealth)
-            }
-
             if(abs(enemy.x - player.x) >= cleanupDist || abs(enemy.y - player.y) >= cleanupDist){
                 enemy.despawn {
                     enemies.remove(enemy)
