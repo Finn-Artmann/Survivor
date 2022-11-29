@@ -4,9 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.space_survivor.databinding.ActivityMainMenuBinding
+import space_survivor.databinding.ActivityMainMenuBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.example.space_survivor.GameActivity
+import space_survivor.activities.GameActivity
 
 class MainMenuActivity : AppCompatActivity() {
 
@@ -31,6 +31,14 @@ class MainMenuActivity : AppCompatActivity() {
             binding.scoreboardButton.isEnabled = true
 
             val launcherIntent = Intent(this, ScoreboardActivity::class.java);
+            startActivity(launcherIntent )
+        }
+
+        binding.loginButton.setOnClickListener {
+            binding.loginButton.isEnabled = true
+            binding.loginButton.isEnabled = true
+
+            val launcherIntent = Intent(this, LoginActivity::class.java);
             startActivity(launcherIntent )
         }
 

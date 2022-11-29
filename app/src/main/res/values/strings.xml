@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Space Survivor</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -13,5 +13,6 @@
 
     <string name="play_button">Play</string>
     <string name="scoreboard_button">Scores</string>
+    <string name="login_button">Login</string>
 
 </resources>

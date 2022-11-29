@@ -1,8 +1,8 @@
-package com.example.space_survivor
+package space_survivor.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.space_survivor.databinding.GameActivityBinding
+import space_survivor.databinding.GameActivityBinding
 
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.CustomModule

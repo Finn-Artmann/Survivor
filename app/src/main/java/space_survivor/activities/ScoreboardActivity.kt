@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.space_survivor.R
-import com.example.space_survivor.databinding.ActivityScoreboardBinding
-import com.example.space_survivor.databinding.CardScoreBinding
+import space_survivor.R
+import space_survivor.databinding.ActivityScoreboardBinding
+import space_survivor.databinding.CardScoreBinding
 import com.soywiz.klock.ISO8601
 import space_survivor.main.MainApp
 import space_survivor.models.ScoreModel
