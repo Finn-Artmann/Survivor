@@ -22,6 +22,7 @@ import space_survivor.models.SavedPreference
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var mainMenuBinding: ActivityMainMenuBinding
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code:Int=123
     private lateinit var firebaseAuth: FirebaseAuth
@@ -29,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+        mainMenuBinding = ActivityMainMenuBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -82,8 +84,10 @@ class LoginActivity : AppCompatActivity() {
             if(task.isSuccessful) {
                 SavedPreference.setEmail(this,account.email.toString())
                 SavedPreference.setUsername(this,account.displayName.toString())
+
                 val intent = Intent(this, MainMenuActivity::class.java)
                 startActivity(intent)
+
                 finish()
             }
         }
@@ -92,7 +96,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if(GoogleSignIn.getLastSignedInAccount(this)!=null){
-            startActivity(Intent(this, MainMenuActivity::class.java))
+
+            val intent = Intent(this, MainMenuActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

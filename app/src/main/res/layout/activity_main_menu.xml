@@ -31,17 +31,40 @@
             tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/login_button"
-            android:layout_width="170dp"
-            android:layout_height="51dp"
-            android:layout_marginTop="96dp"
-            android:text="@string/login_button"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.506"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/play_button"
-            tools:ignore="MissingConstraints" />
-
+                android:id="@+id/login_button"
+                android:layout_width="170dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/login_button"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scoreboard_button"
+                tools:ignore="MissingConstraints"/>
+        <Button
+                android:id="@+id/logout_button"
+                android:layout_width="170dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="24dp"
+                android:text="Logout"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scoreboard_button"
+                tools:ignore="MissingConstraints"/>
+        <TextView
+                android:id="@+id/username_text"
+                android:layout_width="360dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="100dp"
+                android:text="@string/signed_in_text"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logout_button"
+                tools:ignore="MissingConstraints" android:autoSizeTextType="none" android:textAlignment="center"
+                app:layout_constraintHorizontal_bias="0.49"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

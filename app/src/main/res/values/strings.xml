@@ -15,4 +15,6 @@
     <string name="scoreboard_button">Scores</string>
     <string name="login_button">Login</string>
 
+    <string name="signed_out_text">Not signed in</string>
+    <string name="signed_in_text">Signed in as %1$s</string>
 </resources>

@@ -3,16 +3,15 @@ package com.example.space_survivor
 
 import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.*
+import com.soywiz.korge.tween.get
+import com.soywiz.korge.tween.tween
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.shape.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlin.coroutines.coroutineContext
 
 
@@ -28,8 +27,8 @@ class Player : Container(){
     lateinit var moveSound: Sound
     lateinit var damageSound: Sound
     lateinit var state: State
-    lateinit var soundChannel: SoundChannel
     lateinit var healthBar: HealthBar
+
 
 
     var moveSpeed = 600.0
@@ -68,30 +67,35 @@ class Player : Container(){
 
         }
 
+
         addChild(idle)
         addChild(healthBar)
     }
 
-    fun takeDamage(damage: Double){
-        if(state != State.IDLE) return;
+    fun takeDamage(damage: Double) {
+        if (state != State.IDLE) return;
         state = State.DAMAGED
-        if(health > 0) {health -= damage}
+        if (health > 0) {
+            health -= damage
+        }
         healthBar.setHealth(health, maxHealth)
 
 
-        GlobalScope.launch{
 
-            damageSound.play()  //TODO - fix sound playing
+        //TODO add damage sound and animation
 
-            idle.colorMul = Colors.RED
-            delay(0.1.seconds)
-            idle.colorMul = Colors.WHITE
-            state = State.IDLE
-        }
+               //idle.colorMul = Colors.RED
+               //delay(0.1.seconds)
+               //idle.colorMul = Colors.WHITE
+               //state = State.IDLE
+
     }
+
+
 
     fun isMoving() : Boolean{
 
         return moveX != 0.0 || moveY != 0.0;
     }
+
 }
