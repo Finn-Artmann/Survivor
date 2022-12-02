@@ -15,52 +15,69 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlin.math.*
-
+import com.soywiz.korma.geom.Angle
+import com.soywiz.korma.geom.shape.*
+import com.soywiz.korge.view.views
 class Enemy : Container(){
 
+    enum class Type{
+        DEFAULT,
+        HUNTER
+    }
+
     enum class State{
-        IDLE,
-        MOVING
+        ACTIVE,
+        SPAWNING,
     }
 
     private lateinit var idle: Image
     lateinit var state: State
+    lateinit var type: Type
 
     var goalPoint: Point? = null
-    var moveSpeed = 100.0
+    var moveSpeed = 200.0
     var health = 100.0
     var initialDistToGoal = Point(0.0, 0.0)
+    var hitRadius = 40.0
+    var hitCircle = circle{ radius = hitRadius; fill = Colors.RED}
 
 
-    suspend fun loadEnemy(point: Point) {
+
+    suspend fun loadEnemy(point: Point, enemyType: Type = Type.DEFAULT, speed: Double = 200.0) {
 
         position(point)
         scale(.5, .5)
-        state = State.IDLE
+
+        state = State.SPAWNING
+        type = enemyType
+        moveSpeed = speed
         idle = Image(
             resourcesVfs["Galactica_Ranger_A.png"].readBitmap(),
             smoothing = false,
             anchorX = .5
         )
 
-        var hitRadius = 60.0
-        hitShape { Shape2d.Circle(hitRadius /2 , hitRadius /2, hitRadius) }
-        var circ = circle{ radius = hitRadius; fill = Colors.RED}
-        circ.x = -hitRadius
-        circ.y = -hitRadius
+        hitCircle.x = -hitRadius
+        hitCircle.y = -hitRadius
+        hitCircle.visible = false
 
-
-
-        addChild(circ)
-
+        addChild(hitCircle)
         addChild(idle)
+
+        state = State.ACTIVE
+        addUpdater {
+
+            moveInGoalDirection(it)
+
+
+        }
 
     }
 
     fun setGoal(point: Point){
         goalPoint = point
         initialDistToGoal = Point(goalPoint!!.x - x, goalPoint!!.y - y)
-        rotation(Angle(atan2(initialDistToGoal.x, -initialDistToGoal.y)))
+        rotation(Angle.fromRadians(atan2(initialDistToGoal.x, -initialDistToGoal.y)))
     }
 
     fun moveInGoalDirection(dt: TimeSpan){
@@ -74,7 +91,7 @@ class Enemy : Container(){
     fun hunt(huntX: Double, huntY: Double, dt: TimeSpan){
 
         val dist = Point(huntX - x, huntY - y)
-        rotation(Angle(atan2(dist.x, -dist.y)))
+        rotation(Angle.fromRadians(atan2(dist.x, -dist.y)))
         x += dist.normalized.x * moveSpeed * dt.seconds
         y += dist.normalized.y * moveSpeed * dt.seconds
     }

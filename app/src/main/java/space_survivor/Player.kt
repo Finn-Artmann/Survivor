@@ -1,18 +1,19 @@
 package com.example.space_survivor
 
 
+import android.util.Log.i
 import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.*
-import com.soywiz.korge.tween.get
-import com.soywiz.korge.tween.tween
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
+import com.soywiz.korma.geom.Angle
 import com.soywiz.korma.geom.shape.*
 import kotlinx.coroutines.*
-import kotlin.coroutines.coroutineContext
+import kotlin.math.atan2
+
 
 
 class Player : Container(){
@@ -28,16 +29,18 @@ class Player : Container(){
     lateinit var damageSound: Sound
     lateinit var state: State
     lateinit var healthBar: HealthBar
+    var hitRadius = 10.0
 
 
-
-    var moveSpeed = 600.0
+    var moveSpeed = 300.0
     var moveX = 0.0
     var moveY = 0.0
     var health = 100.0
     var maxHealth = 100.0
+    private val fieldMargin = 150
+    var colliding = false
 
-    suspend fun loadPlayer(initialXPos: Double, initialYPos: Double) {
+    suspend fun loadPlayer(initialXPos: Double, initialYPos: Double, virtWidth: Int, virtHeight: Int) {
         position(initialXPos, initialYPos)
         state = State.IDLE
 
@@ -51,20 +54,45 @@ class Player : Container(){
 
         healthBar = HealthBar(30.0).centerXOn(this).positionY(height + 20.0)
 
-        var hitRadius = 13.0
-        hitShape { Shape2d.Circle(hitRadius /2 , hitRadius /2, hitRadius) }
-        var circ = circle{ radius = hitRadius; fill = Colors.RED}
-        circ.x = -hitRadius
-        circ.y = -hitRadius
+        var hitCircle = circle{ radius = hitRadius; fill = Colors.RED}
+        hitCircle.x = -hitRadius
+        hitCircle.y = -hitRadius
+        hitCircle.visible = false
 
+        hitCircle.onCollision(filter = { it != this && it is Circle}) {
+            takeDamage(1.0)
+            moveSpeed = 50.0
+            colliding = true
+        }
 
-        onCollision {
+        hitCircle.onCollisionExit(filter = { it != this && it is Circle}) {
+            moveSpeed = 300.0
+            colliding = false
+        }
 
-            if (it is Enemy){
-                takeDamage(1.0)
+        addUpdater {
+
+            rotation(Angle.fromRadians(atan2(moveX, -moveY)))
+
+            if(moveX <= 0.0 && x > fieldMargin ){
+
+                x += moveX * moveSpeed * it.seconds
             }
 
+            if(moveX >= 0.0 && x < virtWidth - fieldMargin ){
 
+                x += moveX * moveSpeed * it.seconds
+            }
+
+            if(moveY <= 0.0 && y > fieldMargin){
+
+                y += moveY * moveSpeed * it.seconds
+            }
+
+            if(moveY >= 0.0 && y < virtHeight - fieldMargin){
+
+                y += moveY * moveSpeed * it.seconds
+            }
         }
 
 
@@ -83,14 +111,14 @@ class Player : Container(){
 
 
         //TODO add damage sound and animation
-
-               //idle.colorMul = Colors.RED
-               //delay(0.1.seconds)
-               //idle.colorMul = Colors.WHITE
-               //state = State.IDLE
+        launchImmediately(GlobalScope.coroutineContext) {
+            idle.colorMul = Colors.RED
+            delay(0.1.seconds)
+            idle.colorMul = Colors.WHITE
+            state = State.IDLE
+        }
 
     }
-
 
 
     fun isMoving() : Boolean{
