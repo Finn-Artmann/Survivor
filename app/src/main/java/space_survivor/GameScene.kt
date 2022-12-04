@@ -1,5 +1,6 @@
 package com.example.space_survivor
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.soywiz.kds.IntArray2
 import com.soywiz.kds.intMapOf
 import com.soywiz.klock.*
@@ -19,11 +20,13 @@ import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
 import space_survivor.GameOverOverlay
+import space_survivor.main.MainApp
+import space_survivor.models.ScoreModel
 
 
 suspend fun bitmap(path: String) = resourcesVfs[path].readBitmap()
 
-class GameScene : Scene() {
+class GameScene(var app: MainApp) : Scene() {
 
     private lateinit var tilemap: TileMap
     private lateinit var player: Player
@@ -31,6 +34,8 @@ class GameScene : Scene() {
     private lateinit var timerText: Text
     private lateinit var backgroundMusic: SoundChannel
     private lateinit var gameOverOverlay: GameOverOverlay
+    private lateinit var score : ScoreModel
+
 
     private val enemies: MutableList<Enemy> = mutableListOf()
     private val cleanupDist = 1000.0
@@ -38,6 +43,7 @@ class GameScene : Scene() {
     private var timer = 0.minutes
     var backgroundSpeed = 10.0
     var gameOver = false
+
 
 
     override suspend fun Container.sceneInit() {
@@ -94,8 +100,15 @@ class GameScene : Scene() {
 
         // Check if player is dead
         if (player.state == Player.State.DEAD){
+
             gameOver = true
             backgroundMusic.stop()
+
+            // Check if player is logged in and if so, save score
+            if (app.account != null) {
+                score = ScoreModel(app.account?.displayName.toString(), timer)
+                app.scores.create(score)
+            }
             launchImmediately {  }
             launchImmediately { gameOverOverlay.load() }
         }

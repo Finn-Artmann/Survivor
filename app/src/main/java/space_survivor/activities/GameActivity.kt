@@ -11,6 +11,7 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var korgeAndroidView: KorgeAndroidView
     private lateinit var binding: GameActivityBinding
+    private lateinit var app : space_survivor.main.MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,8 @@ class GameActivity : AppCompatActivity() {
         binding = GameActivityBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        app = application as space_survivor.main.MainApp
 
         korgeAndroidView = KorgeAndroidView(this)
         binding.toolContainer.addView(korgeAndroidView)
@@ -28,7 +31,6 @@ class GameActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-
     }
 
     override fun onPause() {
@@ -37,7 +39,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun loadToolModule() {
-        korgeAndroidView.loadModule(CustomModule(width = 800, height = 1440, callback = {
+        korgeAndroidView.loadModule(CustomModule(app, width = 800, height = 1440, callback = {
             println("Callback from android app")
         }))
     }

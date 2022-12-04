@@ -15,11 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import space_survivor.R
+import space_survivor.main.MainApp
 
 class MainMenuActivity : AppCompatActivity() {
 
     public lateinit var binding: ActivityMainMenuBinding
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private var account: GoogleSignInAccount? = null
+    private lateinit var app: MainApp
 
     private val auth by lazy {
         FirebaseAuth.getInstance()
@@ -29,6 +32,8 @@ class MainMenuActivity : AppCompatActivity() {
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        app = application as MainApp
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -76,8 +81,9 @@ class MainMenuActivity : AppCompatActivity() {
 
     private fun checkUserLoggedIn(){
         // Check if user is signed in (non-null) and update UI accordingly.
-        val account = GoogleSignIn.getLastSignedInAccount(this)
+        account = GoogleSignIn.getLastSignedInAccount(this)
         if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+            app.account = account
             binding.loginButton.isEnabled = false
             binding.loginButton.visibility = View.INVISIBLE
             binding.logoutButton.isEnabled = true

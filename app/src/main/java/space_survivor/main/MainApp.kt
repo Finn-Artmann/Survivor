@@ -1,6 +1,7 @@
 package space_survivor.main
 
 import android.app.Application
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.soywiz.klock.TimeSpan
 import space_survivor.models.ScoreMemStore
 import space_survivor.models.ScoreModel
@@ -10,6 +11,7 @@ import timber.log.Timber.i
 class MainApp : Application() {
 
     var scores = ScoreMemStore()
+    var account: GoogleSignInAccount? = null
 
     override fun onCreate(){
         super.onCreate()
