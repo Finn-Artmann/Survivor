@@ -10,11 +10,11 @@ object SavedPreference {
     const val EMAIL= "email"
     const val USERNAME="username"
 
-    private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
+    private fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
 
-    private fun  editor(context: Context, const:String, string: String){
+    private fun editor(context: Context, const:String, string: String){
         getSharedPreference(
             context
         )?.edit()?.putString(const,string)?.apply()

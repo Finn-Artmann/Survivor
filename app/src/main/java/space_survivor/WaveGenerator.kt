@@ -21,6 +21,14 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
 
     var enableHunters = 20
 
+    fun restart(){
+        waveNumber = 1
+        enemiesPerWave = 0
+        enenmyCountIncrement = 1
+        waveTimer = 0.seconds
+        nextWaveDelay = 5.seconds
+        maxWaveLength = 6000
+    }
 
     fun checkNextWave(dt: TimeSpan){
         waveTimer += dt

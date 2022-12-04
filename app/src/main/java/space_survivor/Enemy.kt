@@ -69,7 +69,6 @@ class Enemy : Container(){
 
             moveInGoalDirection(it)
 
-
         }
 
     }
