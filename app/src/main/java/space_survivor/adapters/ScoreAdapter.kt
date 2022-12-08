@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.soywiz.klock.ISO8601
+import com.soywiz.klock.TimeSpan
 import space_survivor.databinding.CardScoreBinding
 import space_survivor.models.ScoreModel
 
@@ -28,8 +29,10 @@ class ScoreAdapter constructor(private var scores: List<ScoreModel>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(score: ScoreModel) {
-            binding.scoreNumber.text = ISO8601.TIME_LOCAL_COMPLETE.format(score.score)
-            binding.playerName.text = score.playerName
+            if(score.score != null) {
+                binding.scoreNumber.text = ISO8601.TIME_LOCAL_COMPLETE.format(TimeSpan(score.score!!.toDouble()))
+                binding.playerName.text = score.playerName
+            }
         }
     }
 }

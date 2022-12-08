@@ -110,7 +110,7 @@ class GameScene(var app: MainApp) : Scene() {
 
             // Check if player is logged in and if so, save score
             if (app.account != null) {
-                score = ScoreModel(0, app.account?.displayName.toString(), timer)
+                score = ScoreModel("0", app.account?.displayName.toString(), timer.millisecondsLong)
                 app.scores.create(score)
             }
 

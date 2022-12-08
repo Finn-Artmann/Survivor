@@ -14,8 +14,12 @@ class ScoreMemStore : ScoreStore {
         return scores
     }
 
+    override fun findOne(score: ScoreModel): ScoreModel? {
+        return scores.find { p -> p.id == score.id }
+    }
+
     override fun create(score: ScoreModel) {
-        score.id = getId()
+        score.id = getId().toString()
         scores.add(score)
         logAll()
     }
@@ -27,6 +31,10 @@ class ScoreMemStore : ScoreStore {
             foundScore.score = score.score
             logAll()
         }
+    }
+
+    override fun delete(score: ScoreModel) {
+        scores.remove(score)
     }
 
     private fun logAll() {
