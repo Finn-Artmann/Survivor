@@ -11,7 +11,11 @@ import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
 import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.Angle
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import timber.log.Timber.i
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.atan2
 
 
@@ -33,6 +37,10 @@ class Player : Container(){
     lateinit var damageSound: Sound
     lateinit var state: State
     lateinit var healthBar: HealthBar
+
+    private var damageCoroutine: Deferred<Unit>? = null
+    private var damageSoundCoroutine: Deferred<Unit>? = null
+
 
     var hitRadius = 10.0
     var moveSpeed = 300.0
@@ -132,20 +140,14 @@ class Player : Container(){
     }
 
     fun takeDamage(damage: Double) {
+
         if (state != State.IDLE) return;
         state = State.DAMAGED
 
-        if (health > 0) {
-            health -= damage
-        }
-
         healthBar.setHealth(health, maxHealth)
 
-        launch(GlobalScope.coroutineContext) {
-            fullHealth.colorMul = Colors.RED
-            delay(0.1.seconds)
-            fullHealth.colorMul = Colors.WHITE
-            state = State.IDLE
+        if (health > 0) {
+            health -= damage
         }
 
         setDamageImage()
@@ -154,11 +156,38 @@ class Player : Container(){
         if (health <= 0 && state != State.DEAD) {
             die()
         }
+        damageSoundCoroutine = GlobalScope.async {
+            damageSound.play()
+        }
+
+
+        damageCoroutine = GlobalScope.async {
+
+            i("Damage coroutine started")
+            fullHealth.colorMul = Colors.RED
+            slightDamage.colorMul = Colors.RED
+            damaged.colorMul = Colors.RED
+            veryDamaged.colorMul = Colors.RED
+            delay(0.1.seconds)
+            fullHealth.colorMul = Colors.WHITE
+            slightDamage.colorMul = Colors.WHITE
+            damaged.colorMul = Colors.WHITE
+            veryDamaged.colorMul = Colors.WHITE
+
+            state = State.IDLE
+            i("Damage coroutine ended")
+        }
+
+        // Register a callback to cancel the coroutine when the function returns
+        damageCoroutine?.invokeOnCompletion {
+            damageCoroutine?.cancel()
+        }
 
     }
 
     fun die() {
         state = State.DEAD
+        damageSoundCoroutine?.cancel()
         launch(GlobalScope.coroutineContext) {
             // Play death animation
             this@Player.tween(this@Player::rotation[Angle.fromDegrees(360.0)], time = 1.seconds)
