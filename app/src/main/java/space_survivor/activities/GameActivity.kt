@@ -1,12 +1,15 @@
 package space_survivor.activities
 
+import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.os.Handler
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import space_survivor.databinding.GameActivityBinding
 
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.CustomModule
+import space_survivor.R
 
 class GameActivity : AppCompatActivity() {
 
@@ -25,6 +28,19 @@ class GameActivity : AppCompatActivity() {
 
         korgeAndroidView = KorgeAndroidView(this)
         binding.toolContainer.addView(korgeAndroidView)
+
+        binding.exitButton.setOnClickListener {
+            // Animate the button using the Animator class
+            val animator = AnimatorInflater.loadAnimator(this, R.animator.exit_button_animator)
+            animator.setTarget(view)
+            animator.start()
+
+            // Finish the activity after the animation has completed
+            Handler().postDelayed({
+                finish()
+            }, animator.duration)
+        }
+
 
         loadToolModule()
     }

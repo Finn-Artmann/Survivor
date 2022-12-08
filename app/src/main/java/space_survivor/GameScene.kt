@@ -72,8 +72,8 @@ class GameScene(var app: MainApp) : Scene() {
         addChild(player)
 
 
-        infoText = text("-").position(5, 5).apply { smoothing = false; textSize = 20.0 }.apply { scale = 1.5 }
-        timerText = text("$timer").position((views.virtualWidth / 2 ), 5).centerXOnStage().apply {textSize = 50.0; scale = 1.5}
+        infoText = text("-").position(25, 50).apply { smoothing = false; textSize = 20.0 }.apply { scale = 2.0 }
+        timerText = text("$timer").position((views.virtualWidth / 2 ), 50).centerXOnStage().apply {textSize = 50.0; scale = 1.5}
         //Set timer text to always be in foreground (in front of enemies) with KorGE
 
 
