@@ -1,6 +1,7 @@
 package space_survivor.activities
 
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import space_survivor.databinding.GameActivityBinding
 
@@ -39,7 +40,18 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun loadToolModule() {
-        korgeAndroidView.loadModule(CustomModule(app, width = 800, height = 1440, callback = {
+
+        // get screen height and width according to api level 32, do not use defaultDisplay since it is deprecated
+
+        val displayMetrics = DisplayMetrics()
+        windowManager.currentWindowMetrics.bounds.let {
+            displayMetrics.widthPixels = it.width()
+            displayMetrics.heightPixels = it.height()
+        }
+
+
+
+        korgeAndroidView.loadModule(CustomModule(app, width =   displayMetrics.widthPixels+100, height = displayMetrics.heightPixels, callback = {
             println("Callback from android app")
         }))
     }

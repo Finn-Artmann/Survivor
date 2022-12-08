@@ -30,27 +30,30 @@ class GameOverOverlay(val sceneContainer: SceneContainer, val onRestart: () -> U
 
 
         gameOverText = text("Game Over!")
-            .centerXOnStage()
             .apply { textSize = 100.0 }
+            .scale(1.5)
+            .centerXOnStage()
+            .positionY(sceneContainer.views.virtualHeight / 4)
+
+
+
 
         // Center the text on the screen
-        gameOverText.position(
-            gameOverText.x - gameOverText.width / 2,
-            sceneContainer.views.virtualHeight / 4 - gameOverText.height / 2
-        )
+       // gameOverText.position(
+       //   sceneContainer.views.virtualHeight / 4 - gameOverText.height / 2
+       // )
 
         restartText = text(" > Restart <", color = Colors.GREEN)
-            .centerXOnStage().apply { textSize = 50.0 }
-
-        // Center the text on the screen
-        restartText.position(
-            restartText.x - restartText.width / 2,
-            sceneContainer.views.virtualHeight / 3 - restartText.height / 2
-        )
+            .apply { textSize = 50.0 }
+            .scale(1.5)
+            .centerXOnStage()
+            .positionY(
+            sceneContainer.views.virtualHeight / 3
+            )
 
 
         restartText.mouse {
-            onClick { restart() }
+            onClick { restartText.color = Colors.DARKGRAY; restart() }
         }
     }
 

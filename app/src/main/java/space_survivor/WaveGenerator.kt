@@ -71,7 +71,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
                 enemies[i].loadEnemy(points.first, type)
                 enemies[i].setGoal(points.second)
 
-                scene.sceneView.addChild(enemies[i])
+                scene.sceneView.addChild(enemies[i].apply { scale = 1.0})
             }
         }
     }
@@ -109,7 +109,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
 
         lateinit var spawnPoint: Point
         lateinit var movePoint: Point
-        val margin = 60.0
+        val margin = 200.0
         val randSide = Random.nextInt(0, 3)
 
 

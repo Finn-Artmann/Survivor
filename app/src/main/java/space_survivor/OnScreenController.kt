@@ -19,6 +19,9 @@ fun Container.addTouchGamepad(
     val view = this
     lateinit var ball: View
 
+    // Make this container uniquely identifiable
+    this.name = "touchGamepad"
+
     container {
         position(width / 2.0, height - radius * 1.1)
         graphics {

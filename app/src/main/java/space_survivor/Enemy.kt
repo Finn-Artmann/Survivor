@@ -51,11 +51,22 @@ class Enemy : Container(){
         state = State.SPAWNING
         type = enemyType
         moveSpeed = speed
-        idle = Image(
-            resourcesVfs["Galactica_Ranger_A.png"].readBitmap(),
-            smoothing = false,
-            anchorX = .5
-        )
+
+        if(enemyType == Type.DEFAULT){
+            idle = Image(
+                resourcesVfs["Galactica_Ranger_A.png"].readBitmap(),
+                smoothing = false,
+                anchorX = .5
+            )
+
+        }
+        else if(enemyType == Type.HUNTER){
+            idle = Image(
+                resourcesVfs["Galactica_Ranger_11.png"].readBitmap(),
+                smoothing = false,
+                anchorX = .5
+            )
+        }
 
         hitCircle.x = -hitRadius
         hitCircle.y = -hitRadius

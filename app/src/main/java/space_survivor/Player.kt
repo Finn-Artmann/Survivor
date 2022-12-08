@@ -81,7 +81,7 @@ class Player : Container(){
         hitCircle.visible = false
 
         hitCircle.onCollision(filter = { it != this && it is Circle}) {
-            takeDamage(1.0)
+            takeDamage(6.0)
             moveSpeed = 50.0
             colliding = true
         }
@@ -141,7 +141,7 @@ class Player : Container(){
 
         healthBar.setHealth(health, maxHealth)
 
-        launchImmediately(GlobalScope.coroutineContext) {
+        launch(GlobalScope.coroutineContext) {
             fullHealth.colorMul = Colors.RED
             delay(0.1.seconds)
             fullHealth.colorMul = Colors.WHITE
@@ -154,11 +154,12 @@ class Player : Container(){
         if (health <= 0 && state != State.DEAD) {
             die()
         }
+
     }
 
     fun die() {
         state = State.DEAD
-        launchImmediately(GlobalScope.coroutineContext) {
+        launch(GlobalScope.coroutineContext) {
             // Play death animation
             this@Player.tween(this@Player::rotation[Angle.fromDegrees(360.0)], time = 1.seconds)
             this@Player.tween(this@Player::alpha[0.0], time = 1.seconds)

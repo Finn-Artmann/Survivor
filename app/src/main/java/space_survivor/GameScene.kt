@@ -8,6 +8,7 @@ import com.soywiz.korau.sound.*
 import com.soywiz.korev.TouchEvent
 import com.soywiz.korge.baseview.BaseView
 import com.soywiz.korge.component.TouchComponent
+import com.soywiz.korge.input.gamepad
 import com.soywiz.korge.input.mouse
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.view.*
@@ -63,7 +64,7 @@ class GameScene(var app: MainApp) : Scene() {
 
         )
 
-        player = Player()
+        player = Player().apply { scale = 1.5 }
         player.loadPlayer(
             1.0 + views.virtualWidth / 2,
             146.0, views.virtualWidth, views.virtualHeight
@@ -71,14 +72,17 @@ class GameScene(var app: MainApp) : Scene() {
         addChild(player)
 
 
-        infoText = text("-").position(5, 5).apply { smoothing = false; textSize = 20.0 }
-        timerText = text("$timer").position((views.virtualWidth / 2 ), 5).centerXOnStage().apply {textSize = 50.0 }
+        infoText = text("-").position(5, 5).apply { smoothing = false; textSize = 20.0 }.apply { scale = 1.5 }
+        timerText = text("$timer").position((views.virtualWidth / 2 ), 5).centerXOnStage().apply {textSize = 50.0; scale = 1.5}
+        //Set timer text to always be in foreground (in front of enemies) with KorGE
+
+
+
 
         gameOverOverlay = GameOverOverlay(sceneContainer) {
             launchImmediately { sceneContainer.changeTo<GameScene>() }
         }
         addChild(gameOverOverlay)
-
 
         addTouchGamepad(
             views.virtualWidth.toDouble(), views.virtualHeight.toDouble(),
@@ -106,10 +110,10 @@ class GameScene(var app: MainApp) : Scene() {
 
             // Check if player is logged in and if so, save score
             if (app.account != null) {
-                score = ScoreModel(app.account?.displayName.toString(), timer)
+                score = ScoreModel(0, app.account?.displayName.toString(), timer)
                 app.scores.create(score)
             }
-            launchImmediately {  }
+
             launchImmediately { gameOverOverlay.load() }
         }
 
@@ -139,7 +143,7 @@ class GameScene(var app: MainApp) : Scene() {
             enemies.forEach { enemy ->
 
                 // despawn enemy if out of view
-                if (enemy.x < -200 || enemy.x > 900 || enemy.y < -200 || enemy.y > 1540){
+                if (enemy.x < -200 || enemy.x > views.virtualWidth+200 || enemy.y < -200 || enemy.y > views.virtualHeight+200){
                     enemy.despawn{ enemies.remove(enemy) }
                 }
 

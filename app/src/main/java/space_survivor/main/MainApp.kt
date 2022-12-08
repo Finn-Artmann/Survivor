@@ -18,8 +18,8 @@ class MainApp : Application() {
         Timber.plant(Timber.DebugTree())
         i("SpaceSurvivor started")
 
-        scores.create(ScoreModel("Player 1", TimeSpan(5000.0)))
-        scores.create(ScoreModel("Player 2", TimeSpan(6640.0)))
-        scores.create(ScoreModel("Player 3", TimeSpan(16640.0)))
+        scores.create(ScoreModel(0,"Player 1", TimeSpan(5000.0)))
+        scores.create(ScoreModel(0,"Player 2", TimeSpan(6640.0)))
+        scores.create(ScoreModel(0,"Player 3", TimeSpan(16640.0)))
     }
 }
