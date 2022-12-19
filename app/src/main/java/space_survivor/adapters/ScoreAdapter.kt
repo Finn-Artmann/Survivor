@@ -32,6 +32,7 @@ class ScoreAdapter constructor(private var scores: List<ScoreModel>) :
             if(score.score != null) {
                 binding.scoreNumber.text = ISO8601.TIME_LOCAL_COMPLETE.format(TimeSpan(score.score!!.toDouble()))
                 binding.playerName.text = score.playerName
+                binding.positionNumber.text = (adapterPosition + 1).toString() + "."
             }
         }
     }

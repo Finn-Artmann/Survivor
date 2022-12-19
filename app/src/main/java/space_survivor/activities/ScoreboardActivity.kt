@@ -30,7 +30,18 @@ class ScoreboardActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll())
+        // Display the top 100 scores in the recycler view sorted by highest score
+        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll().sortedByDescending { it.score }.take(100))
+    }
+
+    // Swipe refresh layout
+    override fun onResume() {
+        super.onResume()
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.recyclerView.adapter?.notifyDataSetChanged()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
     }
 }
 
