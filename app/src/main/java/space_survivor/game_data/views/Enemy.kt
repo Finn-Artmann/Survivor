@@ -1,23 +1,15 @@
-package com.example.space_survivor
+package space_survivor.game_data.views
 
 
 import com.soywiz.klock.*
-import com.soywiz.korau.sound.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.*
 import com.soywiz.korim.format.readBitmap
-import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.*
-import com.soywiz.korma.geom.shape.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.GlobalScope.coroutineContext
 import kotlin.math.*
 import com.soywiz.korma.geom.Angle
-import com.soywiz.korma.geom.shape.*
-import com.soywiz.korge.view.views
+
 class Enemy : Container(){
 
     enum class Type{

@@ -1,4 +1,4 @@
-package com.example.space_survivor
+package space_survivor.game_data
 
 import com.soywiz.kmem.*
 import com.soywiz.korev.*

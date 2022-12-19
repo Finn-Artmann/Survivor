@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import space_survivor.databinding.GameActivityBinding
 
 import com.soywiz.korge.android.KorgeAndroidView
-import space_survivor.CustomModule
+import space_survivor.game_data.util.CustomModule
 import space_survivor.R
 
 class GameActivity : AppCompatActivity() {

@@ -1,14 +1,12 @@
-package com.example.space_survivor
+package space_survivor.game_data.util
 
 import com.soywiz.klock.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korma.geom.*
-import kotlinx.coroutines.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import space_survivor.game_data.views.Enemy
 import kotlin.random.*
-import com.soywiz.korge.scene.*
-import com.soywiz.korge.view.*
 
 class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
 

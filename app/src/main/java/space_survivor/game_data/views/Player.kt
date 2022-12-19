@@ -1,4 +1,4 @@
-package com.example.space_survivor
+package space_survivor.game_data.views
 
 
 import com.soywiz.klock.seconds
@@ -14,8 +14,6 @@ import com.soywiz.korma.geom.Angle
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import timber.log.Timber.i
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.math.atan2
 
 

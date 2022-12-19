@@ -1,4 +1,4 @@
-package com.example.space_survivor
+package space_survivor.game_data.views
 
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*

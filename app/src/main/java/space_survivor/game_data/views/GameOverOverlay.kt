@@ -1,4 +1,4 @@
-package space_survivor
+package space_survivor.game_data.views
 
 import com.soywiz.korau.sound.SoundChannel
 import com.soywiz.korau.sound.readSound

@@ -1,26 +1,22 @@
-package com.example.space_survivor
+package space_survivor.game_data.scenes
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.soywiz.kds.IntArray2
 import com.soywiz.kds.intMapOf
 import com.soywiz.klock.*
 import com.soywiz.korau.sound.*
-import com.soywiz.korev.TouchEvent
-import com.soywiz.korge.baseview.BaseView
-import com.soywiz.korge.component.TouchComponent
-import com.soywiz.korge.input.gamepad
-import com.soywiz.korge.input.mouse
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.resourcesVfs
 import com.soywiz.korge.view.tiles.*
-import com.soywiz.korge.view.tween.hide
-import com.soywiz.korge.view.tween.show
 import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
-import space_survivor.GameOverOverlay
+import space_survivor.game_data.*
+import space_survivor.game_data.util.WaveGenerator
+import space_survivor.game_data.views.Enemy
+import space_survivor.game_data.views.GameOverOverlay
+import space_survivor.game_data.views.Player
 import space_survivor.main.MainApp
 import space_survivor.models.ScoreModel
 

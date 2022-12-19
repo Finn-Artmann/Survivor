@@ -1,10 +1,10 @@
-package space_survivor
+package space_survivor.game_data.util
 
-import com.example.space_survivor.GameScene
 import com.soywiz.korge.scene.Module
 import com.soywiz.korge.scene.Scene
 import com.soywiz.korinject.AsyncInjector
 import com.soywiz.korma.geom.SizeInt
+import space_survivor.game_data.scenes.GameScene
 import space_survivor.main.MainApp
 import kotlin.reflect.KClass
 
