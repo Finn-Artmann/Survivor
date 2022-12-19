@@ -10,13 +10,14 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.space_survivor"
+        applicationId 'com.example.space_survivor'
         minSdk 30
         targetSdk 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {

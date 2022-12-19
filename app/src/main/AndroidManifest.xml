@@ -8,9 +8,9 @@
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/space_survivor_icon"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/space_survivor_icon"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat"
             tools:targetApi="31">
@@ -31,20 +31,10 @@
                 android:name="space_survivor.activities.GameActivity"
                 android:exported="true"
                 android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".activities.LoginActivity"
                     android:exported="true"
                     android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN"/>
-
-                    <category android:name="android.intent.category.LAUNCHER"/>
-                </intent-filter>
         </activity>
     </application>
 
