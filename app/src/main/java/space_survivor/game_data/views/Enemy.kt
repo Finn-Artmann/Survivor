@@ -27,7 +27,7 @@ class Enemy : Container(){
     lateinit var type: Type
 
     var goalPoint: Point? = null
-    var moveSpeed = 200.0
+    var moveSpeed = 4.0
     var health = 100.0
     var initialDistToGoal = Point(0.0, 0.0)
     var hitRadius = 40.0
@@ -35,7 +35,7 @@ class Enemy : Container(){
 
 
 
-    suspend fun loadEnemy(point: Point, enemyType: Type = Type.DEFAULT, speed: Double = 200.0) {
+    suspend fun loadEnemy(point: Point, enemyType: Type = Type.DEFAULT, speed: Double = 40.0) {
 
         position(point)
         scale(.5, .5)
@@ -70,7 +70,7 @@ class Enemy : Container(){
         state = State.ACTIVE
         addUpdater {
 
-            moveInGoalDirection(it)
+            moveInGoalDirection()
 
         }
 
@@ -82,20 +82,20 @@ class Enemy : Container(){
         rotation(Angle.fromRadians(atan2(initialDistToGoal.x, -initialDistToGoal.y)))
     }
 
-    fun moveInGoalDirection(dt: TimeSpan){
+    private fun moveInGoalDirection(){
 
         if(goalPoint == null) return
 
-        x += initialDistToGoal.normalized.x * moveSpeed * dt.seconds
-        y += initialDistToGoal.normalized.y * moveSpeed * dt.seconds
+        x += initialDistToGoal.normalized.x * moveSpeed
+        y += initialDistToGoal.normalized.y * moveSpeed
     }
 
-    fun hunt(huntX: Double, huntY: Double, dt: TimeSpan){
+    fun hunt(huntX: Double, huntY: Double){
 
         val dist = Point(huntX - x, huntY - y)
         rotation(Angle.fromRadians(atan2(dist.x, -dist.y)))
-        x += dist.normalized.x * moveSpeed * dt.seconds
-        y += dist.normalized.y * moveSpeed * dt.seconds
+        x += dist.normalized.x * moveSpeed
+        y += dist.normalized.y * moveSpeed
     }
 
     fun despawn(onDespawn: () -> Unit){

@@ -13,6 +13,7 @@ import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
 import space_survivor.game_data.*
+
 import space_survivor.game_data.util.WaveGenerator
 import space_survivor.game_data.views.Enemy
 import space_survivor.game_data.views.GameOverOverlay
@@ -29,7 +30,7 @@ class GameScene(var app: MainApp) : Scene() {
     private lateinit var player: Player
     private lateinit var infoText: Text
     private lateinit var timerText: Text
-    private lateinit var backgroundMusic: SoundChannel
+    lateinit var backgroundMusic: SoundChannel
     private lateinit var gameOverOverlay: GameOverOverlay
     private lateinit var score : ScoreModel
 
@@ -113,9 +114,26 @@ class GameScene(var app: MainApp) : Scene() {
             launchImmediately { gameOverOverlay.load() }
         }
 
-
         playerMovementUpdate(dt)
-        waveGen.checkNextWave(dt)
+
+
+        // Change background music when waveGen reached specific waves to indicate difficulty increase
+        if ( waveGen.checkNextWave(dt)) {
+
+            when(waveGen.waveNumber){
+                20 -> {
+                    backgroundMusic.stop()
+                    launch { backgroundMusic =  resourcesVfs["DubStepDropBoom.mp3"].readMusic().playForever() }
+                }
+
+                30 -> {
+                    backgroundMusic.stop()
+                    launch { backgroundMusic =  resourcesVfs["DynamicFight_1.mp3"].readMusic().playForever() }
+                }
+            }
+
+        }
+
         infoText.setText("\tWave:\t${waveGen.waveNumber}\n\tEnemies:\t${waveGen.enemiesPerWave}")
 
         // Update timer
@@ -146,7 +164,7 @@ class GameScene(var app: MainApp) : Scene() {
                 // Hunter type enemies will chase the player
                 // They still move in a random direction but will be attracted to the player
                 if(enemy.type == Enemy.Type.HUNTER){
-                    enemy.hunt(player.x, player.y, dt)
+                    enemy.hunt(player.x, player.y)
                 }
 
                 enemy.x -= player.moveX * backgroundSpeed

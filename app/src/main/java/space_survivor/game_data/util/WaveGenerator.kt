@@ -1,12 +1,15 @@
 package space_survivor.game_data.util
 
 import com.soywiz.klock.*
+import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.scene.*
 import com.soywiz.korma.geom.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import space_survivor.game_data.views.Enemy
 import kotlin.random.*
+import com.soywiz.korio.file.std.resourcesVfs
+import kotlin.math.ceil
 
 class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
 
@@ -17,7 +20,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
     var nextWaveDelay : TimeSpan = 5.seconds
     var maxWaveLength : Long = 6000 // milliseconds
 
-    var enableHunters = 20
+
 
     fun restart(){
         waveNumber = 1
@@ -28,37 +31,42 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
         maxWaveLength = 6000
     }
 
-    fun checkNextWave(dt: TimeSpan){
+    // Returns true if the waveNumber was updated
+    fun checkNextWave(dt: TimeSpan) : Boolean{
         waveTimer += dt
         if(waveTimer >= nextWaveDelay){
 
-            if(waveNumber >= 40){
+            if(waveNumber >= 30){
 
-                // Spawn random amount of hunters and enemies with increased speed
-                var hunterCount = Random.nextInt(0, enemiesPerWave)
-                spawnEnemies(hunterCount, Enemy.Type.HUNTER, 300.0)
-                spawnEnemies(enemiesPerWave - hunterCount, Enemy.Type.DEFAULT, 400.0)
+                // Spawn random amount of hunters (max 50%)and enemies with increased speed
+                var hunterCount = Random.nextInt(0,  ceil(enemiesPerWave * 0.5).toInt())
+                spawnEnemies(hunterCount, Enemy.Type.HUNTER)
+                spawnEnemies(enemiesPerWave - hunterCount, Enemy.Type.DEFAULT, 9.0)
+                enenmyCountIncrement = 3
                 enemiesPerWave+=enenmyCountIncrement
             }
             else if(waveNumber >= 20){
 
-                // Spawn random amount of hunters
-                var hunterCount = Random.nextInt(0, enemiesPerWave)
+                // Spawn random amount of hunters, max 20 % of the wave
+                var hunterCount = Random.nextInt(0,  ceil(enemiesPerWave * 0.2).toInt())
                 spawnEnemies(hunterCount, Enemy.Type.HUNTER)
                 spawnEnemies(enemiesPerWave - hunterCount, Enemy.Type.DEFAULT)
+                enenmyCountIncrement = 2
                 enemiesPerWave+=enenmyCountIncrement
             }
             else{
                 // Default case: Spawn default enemies
-                spawnEnemies(enemiesPerWave)
+                spawnEnemies(enemiesPerWave, Enemy.Type.DEFAULT, 4.0)
                 enemiesPerWave+=enenmyCountIncrement
             }
             waveTimer = 0.seconds
             waveNumber++
+            return true
         }
+        return false
     }
 
-    fun spawnEnemies(count: Int, type: Enemy.Type = Enemy.Type.DEFAULT, speed: Double = 200.0){
+    private fun spawnEnemies(count: Int, type: Enemy.Type = Enemy.Type.DEFAULT, speed: Double = 4.0){
         CoroutineScope(scene.coroutineContext).launch {
 
             for (i in 0..count) {
@@ -66,7 +74,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
                 enemies.add(i, Enemy())
 
                 val points = generateEnemyPoints()
-                enemies[i].loadEnemy(points.first, type)
+                enemies[i].loadEnemy(points.first, type, speed)
                 enemies[i].setGoal(points.second)
 
                 scene.sceneView.addChild(enemies[i].apply { scale = 1.0})
@@ -108,10 +116,8 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
         lateinit var spawnPoint: Point
         lateinit var movePoint: Point
         val margin = 200.0
-        val randSide = Random.nextInt(0, 3)
 
-
-        when(randSide){
+        when(Random.nextInt(0, 4)){
 
             // Right
             0 -> {
