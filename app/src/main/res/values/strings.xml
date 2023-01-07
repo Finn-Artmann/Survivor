@@ -12,6 +12,7 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
 
     <string name="play_button">Play</string>
+    <string name="statistics_button">Statistics</string>
     <string name="scoreboard_button">Scores</string>
     <string name="login_button">Login</string>
 

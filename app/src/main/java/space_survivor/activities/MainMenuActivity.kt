@@ -47,6 +47,11 @@ class MainMenuActivity : AppCompatActivity() {
             startActivity(launcherIntent )
         }
 
+        binding.statisticsButton.setOnClickListener {
+            val launcherIntent = Intent(this, StatisticsActivity::class.java);
+            startActivity(launcherIntent )
+        }
+
         binding.scoreboardButton.setOnClickListener {
 
             val launcherIntent = Intent(this, ScoreboardActivity::class.java);
@@ -61,8 +66,8 @@ class MainMenuActivity : AppCompatActivity() {
 
         binding.logoutButton.setOnClickListener {
 
-
             mGoogleSignInClient.signOut()
+            app.account = null
             checkUserLoggedIn()
         }
 

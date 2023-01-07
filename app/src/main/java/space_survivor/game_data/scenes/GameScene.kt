@@ -107,7 +107,11 @@ class GameScene(var app: MainApp) : Scene() {
 
             // Check if player is logged in and if so, save score
             if (app.account != null) {
-                score = ScoreModel("0", app.account?.displayName.toString(), timer.millisecondsLong)
+
+
+                // Get current date and time as string
+                val date = DateTime.nowLocal().toString("yyyy-MM-dd HH:mm:ss")
+                score = ScoreModel("0", app.account?.displayName.toString(), timer.millisecondsLong, date)
                 app.scores.create(score)
             }
 

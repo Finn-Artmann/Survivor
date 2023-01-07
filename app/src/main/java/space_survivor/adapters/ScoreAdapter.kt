@@ -8,7 +8,7 @@ import com.soywiz.klock.TimeSpan
 import space_survivor.databinding.CardScoreBinding
 import space_survivor.models.ScoreModel
 
-class ScoreAdapter constructor(private var scores: List<ScoreModel>) :
+class ScoreAdapter constructor(var scores: List<ScoreModel>) :
     RecyclerView.Adapter<ScoreAdapter.MainHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {

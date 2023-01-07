@@ -1,9 +1,11 @@
 package space_survivor.activities
 
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import space_survivor.R
@@ -30,18 +32,41 @@ class ScoreboardActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        // Display the top 100 scores in the recycler view sorted by highest score
-        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll().sortedByDescending { it.score }.take(100))
-    }
+        updateScores()
 
-    // Swipe refresh layout
-    override fun onResume() {
-        super.onResume()
-        binding.recyclerView.adapter?.notifyDataSetChanged()
         binding.swipeRefreshLayout.setOnRefreshListener {
-            binding.recyclerView.adapter?.notifyDataSetChanged()
+            updateScores()
             binding.swipeRefreshLayout.isRefreshing = false
         }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll().sortedByDescending { it.score }.take(100))
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val imageView = findViewById<ImageView>(R.id.imageView2)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            imageView.scaleType = ImageView.ScaleType.FIT_XY
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        updateScores()
+    }
+
+    private fun updateScores(){
+        // Display the top 100 scores in the recycler view sorted by highest score
+        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll().sortedByDescending { it.score }.take(100))
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 }
 

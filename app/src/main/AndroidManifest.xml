@@ -17,10 +17,12 @@
         <activity
                 android:name="space_survivor.activities.ScoreboardActivity"
                 android:exported="false"
+                android:configChanges="orientation|screenSize"
                 android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen"/>
         <activity
                 android:name="space_survivor.activities.MainMenuActivity"
                 android:exported="true"
+                android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -31,10 +33,17 @@
         <activity
                 android:name="space_survivor.activities.GameActivity"
                 android:exported="true"
+                android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
         </activity>
         <activity android:name=".activities.LoginActivity"
                     android:exported="true"
+                    android:screenOrientation="portrait"
+                    android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
+        </activity>
+        <activity android:name=".activities.StatisticsActivity"
+                    android:exported="true"
+                    android:configChanges="orientation|screenSize"
                     android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
         </activity>
     </application>

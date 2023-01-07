@@ -53,7 +53,8 @@ class ScoreFireBaseStore : ScoreStore {
         // Update the values for the given score object in the database
         scoresRef.child(score.id.toString()).updateChildren(mapOf(
             "playerName" to score.playerName,
-            "score" to score.score
+            "score" to score.score,
+            "dateAndTime" to score.dateAndTime
         ))
     }
 
