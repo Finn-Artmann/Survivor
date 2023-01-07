@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.example.space_survivor">
+          package="space_survivor">
 
     <application
+            android:name="space_survivor.main.MainApp"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/space_survivor_icon"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/space_survivor_icon"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat"
             tools:targetApi="31">
         <activity
-                android:name=".MainActivity"
+                android:name="space_survivor.activities.ScoreboardActivity"
+                android:exported="false"
+                android:configChanges="orientation|screenSize"
+                android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen"/>
+        <activity
+                android:name="space_survivor.activities.MainMenuActivity"
                 android:exported="true"
-                android:label="@string/app_name"
-                android:theme="@style/Theme.MyApplication.NoActionBar">
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name="space_survivor.activities.GameActivity"
+                android:exported="true"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
+        </activity>
+        <activity android:name=".activities.LoginActivity"
+                    android:exported="true"
+                    android:screenOrientation="portrait"
+                    android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
+        </activity>
+        <activity android:name=".activities.StatisticsActivity"
+                    android:exported="true"
+                    android:configChanges="orientation|screenSize"
+                    android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
+        </activity>
     </application>
 
 </manifest>
+
+

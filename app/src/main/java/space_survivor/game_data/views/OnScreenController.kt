@@ -1,4 +1,4 @@
-package com.example.space_survivor
+package space_survivor.game_data
 
 import com.soywiz.kmem.*
 import com.soywiz.korev.*
@@ -19,16 +19,19 @@ fun Container.addTouchGamepad(
     val view = this
     lateinit var ball: View
 
+    // Make this container uniquely identifiable
+    this.name = "touchGamepad"
+
     container {
         position(width / 2.0, height - radius * 1.1)
         graphics {
             fill(Colors.BLACK) { circle(0.0, 0.0, radius) }
-            alpha(0.2)
-        }
+
+        }.apply { alpha(0.2) }
         ball = graphics {
             fill(Colors.WHITE) { circle(0.0, 0.0, radius * 0.7) }
-            alpha(0.2)
-        }
+
+        }.apply { alpha(0.2) }
     }
 
     view.addComponent(object : TouchComponent {
