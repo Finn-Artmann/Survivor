@@ -1,9 +1,12 @@
-package space_survivor.activities
+package space_survivor.fragments
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -13,43 +16,47 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import space_survivor.databinding.ActivityLoginBinding
-
+import com.soywiz.kgl.KmlGlDummy.finish
 import space_survivor.R
-import space_survivor.databinding.ActivityMainMenuBinding
+import space_survivor.activities.MainMenuActivity
+import space_survivor.databinding.FragmentLoginBinding
+import space_survivor.main.MainApp
 import space_survivor.models.SavedPreference
 
-class LoginActivity : AppCompatActivity() {
+class LoginFragment :  Fragment() {
 
-    private lateinit var binding: ActivityLoginBinding
-    private lateinit var mainMenuBinding: ActivityMainMenuBinding
+    lateinit var app : MainApp
+    private lateinit var binding: FragmentLoginBinding
     lateinit var mGoogleSignInClient: GoogleSignInClient
-    val Req_Code:Int=123
+    private val Req_Code:Int=123
     private lateinit var firebaseAuth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        mainMenuBinding = ActivityMainMenuBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentLoginBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        FirebaseApp.initializeApp(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        app = activity?.application as MainApp
+
+        FirebaseApp.initializeApp(app)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
-
+        mGoogleSignInClient= GoogleSignIn.getClient(app,gso)
         firebaseAuth= FirebaseAuth.getInstance()
 
-
         binding.Signin.setOnClickListener{ view: View? ->
-            Toast.makeText(this,"Logging In",Toast.LENGTH_SHORT).show()
+            Toast.makeText(app,"Logging In",Toast.LENGTH_SHORT).show()
             signInGoogle()
         }
-
     }
 
     private fun signInGoogle(){
@@ -74,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
                 UpdateUI(account)
             }
         } catch (e: ApiException){
-            Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(app,e.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -82,10 +89,10 @@ class LoginActivity : AppCompatActivity() {
         val credential= GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
-                SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
+                SavedPreference.setEmail(app,account.email.toString())
+                SavedPreference.setUsername(app,account.displayName.toString())
 
-                val intent = Intent(this, MainMenuActivity::class.java)
+                val intent = Intent(app, MainMenuActivity::class.java)
                 startActivity(intent)
 
                 finish()
@@ -95,12 +102,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if(GoogleSignIn.getLastSignedInAccount(this)!=null){
+        if(GoogleSignIn.getLastSignedInAccount(app)!=null){
 
-            val intent = Intent(this, MainMenuActivity::class.java)
+            val intent = Intent(app, MainMenuActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
-
 }
