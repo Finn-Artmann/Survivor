@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/nav_graph"
-            app:startDestination="@id/FirstFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/mainMenuFragment">
 
     <fragment
-            android:id="@+id/FirstFragment"
-            android:name="com.example.myapplication.FirstFragment"
-            android:label="@string/first_fragment_label"
-            tools:layout="@layout/fragment_first">
+            android:id="@+id/mainMenuFragment"
+            android:name="space_survivor.fragments.MainMenuFragment"
+            android:label="MainMenuFragment"
+            tools:layout="@layout/fragment_main_menu" >
 
         <action
-                android:id="@+id/action_FirstFragment_to_SecondFragment"
-                app:destination="@id/SecondFragment"/>
+                android:id="@+id/action_mainMenuFragment_to_gameFragment"
+                app:destination="@id/gameFragment" />
+
+        <action
+                android:id="@+id/action_mainMenuFragment_to_statisticsFragment"
+                app:destination="@id/statisticsFragment" />
+
+        <action
+                android:id="@+id/action_mainMenuFragment_to_scoreboardFragment"
+                app:destination="@id/scoreboardFragment" />
+
+        <action
+                android:id="@+id/action_mainMenuFragment_to_loginFragment"
+                app:destination="@id/loginFragment" />
     </fragment>
+
     <fragment
-            android:id="@+id/SecondFragment"
-            android:name="com.example.myapplication.SecondFragment"
-            android:label="@string/second_fragment_label"
-            tools:layout="@layout/fragment_second">
-
+            android:id="@+id/gameFragment"
+            android:name="space_survivor.fragments.GameFragment"
+            android:label="GameFragment"
+            tools:layout="@layout/fragment_game">
         <action
-                android:id="@+id/action_SecondFragment_to_FirstFragment"
-                app:destination="@id/FirstFragment"/>
+            android:id="@+id/action_gameFragment_to_mainMenuFragment"
+            app:destination="@id/mainMenuFragment" />
     </fragment>
+
+    <fragment
+            android:id="@+id/statisticsFragment"
+            android:name="space_survivor.fragments.StatisticsFragment"
+            android:label="StatisticsFragment"
+            tools:layout="@layout/fragment_statistics"/>
+
+    <fragment
+            android:id="@+id/scoreboardFragment"
+            android:name="space_survivor.fragments.ScoreboardFragment"
+            android:label="ScoreboardFragment"
+            tools:layout="@layout/fragment_scoreboard" />
+
+    <fragment
+            android:id="@+id/loginFragment"
+            android:name="space_survivor.fragments.LoginFragment"
+            android:label="LoginFragment"
+            tools:layout="@layout/fragment_login"/>
 </navigation>
