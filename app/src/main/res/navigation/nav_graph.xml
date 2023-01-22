@@ -11,20 +11,36 @@
             tools:layout="@layout/fragment_main_menu" >
 
         <action
-                android:id="@+id/action_mainMenuFragment_to_gameFragment"
-                app:destination="@id/gameFragment" />
+            android:id="@+id/action_mainMenuFragment_to_gameFragment"
+            app:destination="@id/gameFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
         <action
-                android:id="@+id/action_mainMenuFragment_to_statisticsFragment"
-                app:destination="@id/statisticsFragment" />
+            android:id="@+id/action_mainMenuFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
         <action
-                android:id="@+id/action_mainMenuFragment_to_scoreboardFragment"
-                app:destination="@id/scoreboardFragment" />
+            android:id="@+id/action_mainMenuFragment_to_scoreboardFragment"
+            app:destination="@id/scoreboardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
         <action
-                android:id="@+id/action_mainMenuFragment_to_loginFragment"
-                app:destination="@id/loginFragment" />
+            android:id="@+id/action_mainMenuFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -34,7 +50,11 @@
             tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_gameFragment_to_mainMenuFragment"
-            app:destination="@id/mainMenuFragment" />
+            app:destination="@id/mainMenuFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
