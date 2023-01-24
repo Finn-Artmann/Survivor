@@ -55,6 +55,8 @@ class StatisticsFragment : Fragment() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
+
+        i("-------------onConfigurationChanged called------------")
         super.onConfigurationChanged(newConfig)
         val imageView = view?.findViewById<ImageView>(R.id.imageView2) ?: return
 
@@ -66,7 +68,7 @@ class StatisticsFragment : Fragment() {
     }
 
     private fun drawPlayerStats(){
-
+        i("----------DRAW called------------")
         val graphView: GraphView = binding.root.findViewById(R.id.graph_view)
         val series = LineGraphSeries<DataPoint>()
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())

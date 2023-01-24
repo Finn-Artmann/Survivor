@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.R
+import space_survivor.activities.MainMenuActivity
 import space_survivor.databinding.FragmentGameBinding
 import space_survivor.game_data.util.CustomModule
 import space_survivor.main.MainApp
@@ -52,6 +53,7 @@ class GameFragment : Fragment() {
 
         loadToolModule()
     }
+
 
     private fun loadToolModule() {
 

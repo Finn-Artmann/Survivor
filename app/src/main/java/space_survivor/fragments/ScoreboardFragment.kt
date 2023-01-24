@@ -6,12 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import space_survivor.R
+import space_survivor.activities.MainMenuActivity
 import space_survivor.adapters.ScoreAdapter
 import space_survivor.databinding.FragmentScoreboardBinding
 import space_survivor.main.MainApp
+import timber.log.Timber.i
 
 class ScoreboardFragment : Fragment() {
 
@@ -24,6 +30,7 @@ class ScoreboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentScoreboardBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -43,11 +50,17 @@ class ScoreboardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        binding.recyclerView.adapter = ScoreAdapter(app.scores.findAll().sortedByDescending { it.score }.take(100))
+        binding.recyclerView.adapter = ScoreAdapter(
+            app.scores.findAll().sortedByDescending { it.score }.take(100)
+        )
         binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
+
+        // print debug message
+        i("onConfigurationChanged called")
+
         super.onConfigurationChanged(newConfig)
         val imageView = view?.findViewById<ImageView>(R.id.imageView2) ?: return
 

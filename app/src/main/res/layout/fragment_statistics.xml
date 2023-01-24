@@ -5,17 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:configChanges="orientation|screenSize"
     tools:context="space_survivor.fragments.StatisticsFragment">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#24025A"
-        android:elevation="4dp"
-        app:title="Player Personal Statistics Tracker"
-        app:titleTextColor="#FFFFFF"
-        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -23,18 +15,20 @@
         app:srcCompat="@drawable/leaderboard_bg"
         android:id="@+id/imageView2"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/statistics" />
 
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintBottom_toTopOf="@id/button_zoom_out"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -43,31 +37,35 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_zoom_out"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp"/>
 
 
+        <Button
+            android:id="@+id/button_zoom_out"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/zoom_out"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/graph_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.AppCompat.Button"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:backgroundTint="@color/purple_700" android:alpha="?android:attr/primaryContentAlpha"
+            android:textColor="#FFFFFF"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintVertical_bias="0.964"/>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/button_zoom_out"
-        android:layout_width="140dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="-24dp"
-        android:text="@string/zoom_out"
-        android:textSize="15sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/Widget.AppCompat.Button"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:backgroundTint="@color/purple_700" android:alpha="?android:attr/primaryContentAlpha"
-        android:textColor="#FFFFFF" app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintVertical_bias="0.964"/>
+
 
 
 
