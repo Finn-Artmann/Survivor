@@ -2,6 +2,8 @@ package space_survivor.fragments
 
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,13 +33,13 @@ class MainMenuFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_main_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         navController = Navigation.findNavController(view)
         binding = FragmentMainMenuBinding.bind(view)
         app = activity?.application as MainApp
@@ -97,6 +99,17 @@ class MainMenuFragment : Fragment(){
             binding.usernameText.text = getString(R.string.signed_out_text)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
     }
 
 }
