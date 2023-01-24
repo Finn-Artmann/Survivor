@@ -2,6 +2,7 @@ package space_survivor.activities
 
 
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -27,10 +28,13 @@ class MainMenuActivity : AppCompatActivity() {
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     lateinit var navController: NavController
     private lateinit var binding: ActivityMainMenuBinding
+    lateinit var app : MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        app = application as MainApp
+        app.orientation = resources.configuration.orientation
         binding = ActivityMainMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
@@ -135,6 +139,19 @@ class MainMenuActivity : AppCompatActivity() {
                     toolbar.visibility = View.VISIBLE
                 }
             })
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            i("Landscape")
+            app.orientation = Configuration.ORIENTATION_LANDSCAPE
+        }
+        else if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            i("Portrait")
+            app.orientation = Configuration.ORIENTATION_PORTRAIT
+        }
     }
 
 

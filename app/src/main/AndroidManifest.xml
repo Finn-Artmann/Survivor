@@ -19,6 +19,7 @@
                 android:name="space_survivor.activities.MainMenuActivity"
                 android:exported="true"
                 android:screenOrientation="fullSensor"
+                android:configChanges="orientation|screenSize"
                 android:theme="@style/Theme.AppCompat.Dark.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

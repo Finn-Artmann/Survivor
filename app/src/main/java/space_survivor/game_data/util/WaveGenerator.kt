@@ -66,7 +66,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
         return false
     }
 
-    private fun spawnEnemies(count: Int, type: Enemy.Type = Enemy.Type.DEFAULT, speed: Double = 4.0){
+    fun spawnEnemies(count: Int, type: Enemy.Type = Enemy.Type.DEFAULT, speed: Double = 4.0){
         CoroutineScope(scene.coroutineContext).launch {
 
             for (i in 0..count) {

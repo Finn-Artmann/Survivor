@@ -1,6 +1,7 @@
 package space_survivor.fragments
 
 import android.animation.AnimatorInflater
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.R
@@ -16,12 +18,24 @@ import space_survivor.activities.MainMenuActivity
 import space_survivor.databinding.FragmentGameBinding
 import space_survivor.game_data.util.CustomModule
 import space_survivor.main.MainApp
+import space_survivor.view_models.GameViewModel
+import space_survivor.view_models.GameViewModelFactory
 
 class GameFragment : Fragment() {
 
+    private lateinit var viewModel: GameViewModel
     private lateinit var korgeAndroidView: KorgeAndroidView
     private lateinit var binding: FragmentGameBinding
-    private lateinit var app : MainApp
+
+    override fun onCreate(savedInstanceState: Bundle?){
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(
+            this,
+                GameViewModelFactory(requireActivity().application,
+                DisplayMetrics())
+        )[GameViewModel::class.java]
+        viewModel.app = activity?.application as MainApp
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,14 +48,17 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        app = activity?.application as MainApp
 
-        korgeAndroidView = KorgeAndroidView(app)
+        viewModel.displayMetrics = resources.displayMetrics
+        korgeAndroidView = KorgeAndroidView(viewModel.app)
+        viewModel.loadToolModule(korgeAndroidView)
         binding.toolContainer.addView(korgeAndroidView)
-
         binding.exitButton.setOnClickListener {
             // Animate the button using the Animator class
-            val animator = AnimatorInflater.loadAnimator(app, R.animator.exit_button_animator)
+            val animator = AnimatorInflater.loadAnimator(
+                viewModel.app,
+                R.animator.exit_button_animator
+            )
             animator.setTarget(view)
             animator.start()
 
@@ -50,27 +67,27 @@ class GameFragment : Fragment() {
                 findNavController().navigate(R.id.action_gameFragment_to_mainMenuFragment)
             }, animator.duration)
         }
-
-        loadToolModule()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
 
-    private fun loadToolModule() {
-
-        // get screen height and width according to api level 32
+        val parent = korgeAndroidView.parent as ViewGroup
+        parent.removeView(korgeAndroidView)
+        viewModel.unloadToolModule(korgeAndroidView)
         val displayMetrics = DisplayMetrics()
         val activity = activity ?: return
-        activity.windowManager.currentWindowMetrics.bounds.let {
-            displayMetrics.widthPixels = it.width()
-            displayMetrics.heightPixels = it.height()
-        }
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        korgeAndroidView.loadModule(CustomModule(app, width =   displayMetrics.widthPixels+100, height = displayMetrics.heightPixels, callback = {
-            println("Callback from android app")
-        }))
+        viewModel.displayMetrics = displayMetrics
+        korgeAndroidView = KorgeAndroidView(viewModel.app)
+        viewModel.loadToolModule(korgeAndroidView)
+        binding.toolContainer.addView(korgeAndroidView)
+
     }
 
-    private fun unloadToolModule() {
-        korgeAndroidView.unloadModule()
+    override fun onPause() {
+        super.onPause()
+        viewModel.unloadToolModule(korgeAndroidView)
     }
 }

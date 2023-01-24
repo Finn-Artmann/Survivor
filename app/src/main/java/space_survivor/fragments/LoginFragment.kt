@@ -1,10 +1,12 @@
 package space_survivor.fragments
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,6 +24,7 @@ import space_survivor.activities.MainMenuActivity
 import space_survivor.databinding.FragmentLoginBinding
 import space_survivor.main.MainApp
 import space_survivor.models.SavedPreference
+import timber.log.Timber
 
 class LoginFragment :  Fragment() {
 
@@ -110,4 +113,5 @@ class LoginFragment :  Fragment() {
             finish()
         }
     }
+
 }
