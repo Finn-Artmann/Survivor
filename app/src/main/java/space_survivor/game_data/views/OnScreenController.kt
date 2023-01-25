@@ -8,6 +8,8 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korma.geom.*
 import com.soywiz.korma.geom.vector.*
+import space_survivor.main.MainApp
+import timber.log.Timber.i
 import kotlin.math.*
 
 fun Container.addTouchGamepad(
@@ -15,15 +17,25 @@ fun Container.addTouchGamepad(
     height: Double = 1440.0,
     radius: Double = height / 8,
     onStick: (x: Double, y: Double) -> Unit = { _, _ -> },
+    app: MainApp
 ) {
     val view = this
+    var radius = radius
     lateinit var ball: View
 
     // Make this container uniquely identifiable
     this.name = "touchGamepad"
-
     container {
-        position(width / 2.0, height - radius * 1.1)
+
+        if( app.orientation == 1){
+            position(width / 2.0, height - radius * 1.1)
+        }
+        else{
+            position(width - radius * 2.2, height / 2.0)
+            radius = width / 10
+        }
+
+
         graphics {
             fill(Colors.BLACK) { circle(0.0, 0.0, radius) }
 
@@ -46,7 +58,16 @@ fun Container.addTouchGamepad(
 
             when (e.type) {
                 TouchEvent.Type.START -> {
-                    if (px >= height / 2) return
+
+                    if (app.orientation == 1){
+                        if (px >= height / 2) return
+                    }
+                    else{
+                        i("py: $py ; px: $px; widh/2: ${width/2}")
+                        if (px <= width / 2) return
+                    }
+
+
                     start.x = px
                     start.y = py
                     ball.alpha = 0.3
@@ -77,4 +98,3 @@ fun Container.addTouchGamepad(
         }
     })
 }
-

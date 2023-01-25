@@ -1,14 +1,15 @@
-package space_survivor.activities
+package space_survivor.fragments
 
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
@@ -16,32 +17,48 @@ import com.jjoe64.graphview.LegendRenderer
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import com.soywiz.klock.ISO8601
 import com.soywiz.klock.TimeSpan
 import space_survivor.R
-import space_survivor.databinding.ActivityStatisticsBinding
+import space_survivor.databinding.FragmentStatisticsBinding
 import space_survivor.main.MainApp
+import space_survivor.view_models.StatisticsViewModel
+import timber.log.Timber.i
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import timber.log.Timber.i
-import java.util.*
-import kotlin.time.Duration.Companion.minutes
 
-class StatisticsActivity : AppCompatActivity() {
+class StatisticsFragment : Fragment() {
 
-    lateinit var app : MainApp
-    private lateinit var binding: ActivityStatisticsBinding
-
+    private lateinit var binding: FragmentStatisticsBinding
+    private lateinit var viewModel: StatisticsViewModel
+    private lateinit var graphView: GraphView
+    private lateinit var formatter: SimpleDateFormat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[StatisticsViewModel::class.java]
+        viewModel.app = activity?.application as MainApp
+    }
 
-        binding = ActivityStatisticsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        app = application as MainApp
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentStatisticsBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
-        val layoutManager = LinearLayoutManager(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        graphView = binding.root.findViewById(R.id.graph_view)
+        formatter = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss",
+            java.util.Locale.getDefault()
+        )
+
+        configureGraphView()
 
         binding.buttonZoomOut.setOnClickListener{
             drawPlayerStats()
@@ -56,8 +73,11 @@ class StatisticsActivity : AppCompatActivity() {
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
+
+        i("-------------onConfigurationChanged called------------")
         super.onConfigurationChanged(newConfig)
-        val imageView = findViewById<ImageView>(R.id.imageView2)
+        val imageView = view?.findViewById<ImageView>(R.id.imageView2) ?: return
+
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             imageView.scaleType = ImageView.ScaleType.CENTER_CROP
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -65,15 +85,10 @@ class StatisticsActivity : AppCompatActivity() {
         }
     }
 
-    private fun drawPlayerStats(){
-
-        val graphView: GraphView = binding.root.findViewById(R.id.graph_view)
-        val series = LineGraphSeries<DataPoint>()
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
-
+    private fun configureGraphView(){
         // Format graph view
         graphView.gridLabelRenderer.setHorizontalLabelsAngle(135)
-        graphView.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
+        graphView.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(viewModel.app)
         graphView.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
@@ -100,7 +115,12 @@ class StatisticsActivity : AppCompatActivity() {
         graphView.legendRenderer.textSize = 20f
         graphView.legendRenderer.padding = 50
         graphView.legendRenderer.align = LegendRenderer.LegendAlign.TOP
+    }
 
+    private fun drawPlayerStats(){
+        i("----------DRAW called------------")
+        val app = viewModel.app ?: return
+        val series = LineGraphSeries<DataPoint>()
 
         series.title = "Player Score"
         series.color = Color.MAGENTA
@@ -109,11 +129,11 @@ class StatisticsActivity : AppCompatActivity() {
         series.isDrawDataPoints = true
         series.setOnDataPointTapListener{ _, dataPoint ->
 
-            var time = TimeSpan(dataPoint.y);
+            val time = TimeSpan(dataPoint.y)
 
             val text = "You survived for " +  time.hours.toInt() % 60 + " hours, " + time.minutes.toInt() % 60 +
-                            " minutes and " + time.seconds.toInt() % 60 + " seconds on " +
-                            formatter.format(dataPoint.x) + "."
+                    " minutes and " + time.seconds.toInt() % 60 + " seconds on " +
+                    formatter.format(dataPoint.x) + "."
 
             val snackbar = Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG)
             snackbar.view.setBackgroundColor(Color.BLACK)
@@ -122,7 +142,6 @@ class StatisticsActivity : AppCompatActivity() {
             // Make sure the background color/alpha does not change
             series.backgroundColor = Color.argb(50, 255, 0, 255)
         }
-1
 
         // Get all scores of currently logged in user
         if(app.account != null){
@@ -135,7 +154,6 @@ class StatisticsActivity : AppCompatActivity() {
             var minScore: Long? = null
             var maxDate : java.util.Date? = null
             var minDate : java.util.Date? = null
-
 
             // Add scores to graph
             for (score in sortedScores){
@@ -179,8 +197,8 @@ class StatisticsActivity : AppCompatActivity() {
             }
 
             if(maxDate != null && minDate != null){
-                graphView.viewport.setMinX(minDate!!.time.toDouble())
-                graphView.viewport.setMaxX(maxDate!!.time.toDouble())
+                graphView.viewport.setMinX(minDate.time.toDouble())
+                graphView.viewport.setMaxX(maxDate.time.toDouble())
                 graphView.viewport.setMaxY(maxScore.toDouble())
                 if (minScore != null) {
                     graphView.viewport.setMinY(minScore.toDouble())
@@ -193,7 +211,7 @@ class StatisticsActivity : AppCompatActivity() {
         else{
             i("Account is null")
             // Show toast message if user is not logged in
-            Toast.makeText(this, "Please log in to view your statistics", Toast.LENGTH_LONG).show()
+            Toast.makeText(app, "Please log in to view your statistics", Toast.LENGTH_LONG).show()
         }
 
         graphView.removeAllSeries()
@@ -204,5 +222,4 @@ class StatisticsActivity : AppCompatActivity() {
         graphView.viewport.setScalableY(true)
         graphView.viewport.setScrollableY(true)
     }
-
 }

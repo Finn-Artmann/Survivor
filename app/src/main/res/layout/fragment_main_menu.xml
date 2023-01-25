@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="space_survivor.fragments.MainMenuFragment">
+
+
+    <Button
+        android:id="@+id/play_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="170dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="392dp"
+        android:alpha="?android:attr/primaryContentAlpha"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/play_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?colorTertiary"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/statistics_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="170dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:alpha="?android:attr/primaryContentAlpha"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/statistics_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?colorTertiary"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_button"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/scoreboard_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="170dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:alpha="?android:attr/primaryContentAlpha"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/scoreboard_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?colorTertiary"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statistics_button"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/login_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="170dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:alpha="?android:attr/primaryContentAlpha"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/login_button"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?colorTertiary"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreboard_button"
+        tools:ignore="MissingConstraints,DuplicateClickableBoundsCheck" />
+
+    <Button
+        android:id="@+id/logout_button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="170dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="24dp"
+        android:alpha="?android:attr/primaryContentAlpha"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/logout"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="?colorTertiary"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreboard_button"
+        tools:ignore="MissingConstraints" />
+
+
+
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="360dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="100dp"
+        android:autoSizeTextType="none"
+        android:text="@string/signed_in_text"
+        android:textAlignment="center"
+        android:textColor="?colorTertiary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logout_button"
+        tools:ignore="MissingConstraints" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
