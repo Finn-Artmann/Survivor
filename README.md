@@ -28,7 +28,7 @@ The game is developed in Kotlin using the KorGE (https://korge.org/) as game eng
 - Current wave and amount of enemies in this wave gets displayed
 - Spaceship of player looks more and more damaged as players health is decreased
 - Supports portrait and landscape mode
-- Different enemy types: standard (moves straight to it's goal) and hunters (move to it's goal and try to catch player)
+- Different enemy types: standard (moves straight to it's goal) and hunters (moves to it's goal and tries to catch player)
 - Enemy waves get automatically generated
 - Different stages as the game progresses: 
 	1. **First stage:** Standard enemies
