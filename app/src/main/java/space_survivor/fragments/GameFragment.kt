@@ -14,9 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.R
-import space_survivor.activities.MainMenuActivity
 import space_survivor.databinding.FragmentGameBinding
-import space_survivor.game_data.util.CustomModule
 import space_survivor.main.MainApp
 import space_survivor.view_models.GameViewModel
 import space_survivor.view_models.GameViewModelFactory
@@ -62,7 +60,8 @@ class GameFragment : Fragment() {
             animator.setTarget(view)
             animator.start()
 
-            // Finish the activity after the animation has completed
+            viewModel.resetGameState()
+
             Handler(Looper.getMainLooper()).postDelayed({
                 findNavController().navigate(R.id.action_gameFragment_to_mainMenuFragment)
             }, animator.duration)

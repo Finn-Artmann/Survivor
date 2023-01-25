@@ -1,6 +1,5 @@
 package space_survivor.game_data.scenes
 
-import androidx.lifecycle.createSavedStateHandle
 import com.soywiz.kds.IntArray2
 import com.soywiz.kds.intMapOf
 import com.soywiz.klock.*
@@ -13,7 +12,6 @@ import com.soywiz.korge.view.tiles.*
 import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
-import com.soywiz.korma.geom.Point
 import space_survivor.game_data.*
 import space_survivor.game_data.util.GameState
 
@@ -23,7 +21,6 @@ import space_survivor.game_data.views.GameOverOverlay
 import space_survivor.game_data.views.Player
 import space_survivor.main.MainApp
 import space_survivor.models.ScoreModel
-import space_survivor.view_models.GameViewModel
 
 
 suspend fun bitmap(path: String) = resourcesVfs[path].readBitmap()
@@ -49,6 +46,7 @@ class GameScene(var app: MainApp) : Scene() {
 
     override suspend fun Container.sceneInit() {
 
+        app.resetGame = false
         if (app.gameState != null) {
             loadGameState(app.gameState!!)
         } else {
@@ -60,7 +58,7 @@ class GameScene(var app: MainApp) : Scene() {
             )
         }
 
-        var tileset = TileSet(
+        val tileset = TileSet(
             intMapOf(
                 0 to TileSetTileInfo(0, bitmap("bg49.png").slice()),
                 1 to TileSetTileInfo(1, bitmap("bg56.png").slice()),
@@ -136,7 +134,7 @@ class GameScene(var app: MainApp) : Scene() {
             launchImmediately { gameOverOverlay.load() }
         }
 
-        playerMovementUpdate(dt)
+        playerMovementUpdate()
 
 
         // Change background music when waveGen reached specific waves to indicate difficulty increase
@@ -166,14 +164,13 @@ class GameScene(var app: MainApp) : Scene() {
 
         // Update timer
         timer += dt
-        timerText.setText("${ISO8601.TIME_LOCAL_COMPLETE.format(timer)}")
+        timerText.setText(ISO8601.TIME_LOCAL_COMPLETE.format(timer))
         timerText.centerXOnStage()
 
     }
 
 
-    private fun playerMovementUpdate(dt: TimeSpan) {
-
+    private fun playerMovementUpdate() {
         //joystick_text.setText("Stick: (${player.moveX.toStringDecimal(2)}, ${player.moveY.toStringDecimal(2)})")
 
         backgroundSpeed =
@@ -213,6 +210,11 @@ class GameScene(var app: MainApp) : Scene() {
 
     override suspend fun sceneDestroy() {
         super.sceneDestroy()
+
+        if(app.resetGame) {
+            app.gameState = null
+            return
+        }
 
         // Save game state to object
         val gameState = GameState(

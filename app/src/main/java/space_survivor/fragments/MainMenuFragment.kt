@@ -1,32 +1,36 @@
 package space_survivor.fragments
 
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import space_survivor.R
 import space_survivor.databinding.FragmentMainMenuBinding
 import space_survivor.main.MainApp
+import space_survivor.view_models.MainMenuViewModel
 
 class MainMenuFragment : Fragment(){
 
     private lateinit var binding: FragmentMainMenuBinding
+    private lateinit var viewModel: MainMenuViewModel
     private lateinit var navController: NavController
 
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-    private var account: GoogleSignInAccount? = null
-    private lateinit var app: MainApp
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[MainMenuViewModel::class.java]
+        viewModel.app = activity?.application as MainApp
+        if (viewModel.app != null) {
+            viewModel.webClientId = viewModel.app!!.getString(
+                R.string.default_web_client_id
+            )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,11 +43,9 @@ class MainMenuFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         navController = Navigation.findNavController(view)
         binding = FragmentMainMenuBinding.bind(view)
-        app = activity?.application as MainApp
-
 
         binding.playButton.setOnClickListener {
             navController.navigate(R.id.action_mainMenuFragment_to_gameFragment)
@@ -62,25 +64,22 @@ class MainMenuFragment : Fragment(){
         }
 
         binding.logoutButton.setOnClickListener {
-            mGoogleSignInClient.signOut()
-            app.account = null
-            checkUserLoggedIn()
+            viewModel.mGoogleSignInClient?.signOut()
+            viewModel.app?.account = null
+            updateLoggedInUI()
         }
 
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        mGoogleSignInClient= GoogleSignIn.getClient(app,gso)
-        checkUserLoggedIn()
-
+        viewModel.setGoogleSignInClient()
+        updateLoggedInUI()
     }
 
 
-    private fun checkUserLoggedIn(){
+    private fun updateLoggedInUI(){
         // Check if user is signed in (non-null) and update UI accordingly.
-        account = GoogleSignIn.getLastSignedInAccount(app)
+        if(viewModel.app == null) return
+
+        val app = viewModel.app!!
+        val account = GoogleSignIn.getLastSignedInAccount(app)
         if (GoogleSignIn.getLastSignedInAccount(app) != null) {
             app.account = account
             binding.loginButton.isEnabled = false
@@ -103,13 +102,13 @@ class MainMenuFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
 
     override fun onPause() {
         super.onPause()
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR;
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
     }
 
 }

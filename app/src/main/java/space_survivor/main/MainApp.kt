@@ -13,6 +13,7 @@ class MainApp : Application() {
     lateinit var scores : ScoreFireBaseStore
     var account: GoogleSignInAccount? = null
     var gameState : GameState? = null
+    var resetGame : Boolean = false
     var orientation : Int = 1
 
     override fun onCreate(){

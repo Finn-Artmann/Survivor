@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
@@ -20,14 +21,24 @@ import com.soywiz.klock.TimeSpan
 import space_survivor.R
 import space_survivor.databinding.FragmentStatisticsBinding
 import space_survivor.main.MainApp
+import space_survivor.view_models.StatisticsViewModel
 import timber.log.Timber.i
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
 class StatisticsFragment : Fragment() {
 
-    lateinit var app : MainApp
     private lateinit var binding: FragmentStatisticsBinding
+    private lateinit var viewModel: StatisticsViewModel
+    private lateinit var graphView: GraphView
+    private lateinit var formatter: SimpleDateFormat
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[StatisticsViewModel::class.java]
+        viewModel.app = activity?.application as MainApp
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +51,14 @@ class StatisticsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        app = activity?.application as MainApp
+
+        graphView = binding.root.findViewById(R.id.graph_view)
+        formatter = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss",
+            java.util.Locale.getDefault()
+        )
+
+        configureGraphView()
 
         binding.buttonZoomOut.setOnClickListener{
             drawPlayerStats()
@@ -67,15 +85,10 @@ class StatisticsFragment : Fragment() {
         }
     }
 
-    private fun drawPlayerStats(){
-        i("----------DRAW called------------")
-        val graphView: GraphView = binding.root.findViewById(R.id.graph_view)
-        val series = LineGraphSeries<DataPoint>()
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
-
+    private fun configureGraphView(){
         // Format graph view
         graphView.gridLabelRenderer.setHorizontalLabelsAngle(135)
-        graphView.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(app)
+        graphView.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(viewModel.app)
         graphView.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
@@ -102,7 +115,12 @@ class StatisticsFragment : Fragment() {
         graphView.legendRenderer.textSize = 20f
         graphView.legendRenderer.padding = 50
         graphView.legendRenderer.align = LegendRenderer.LegendAlign.TOP
+    }
 
+    private fun drawPlayerStats(){
+        i("----------DRAW called------------")
+        val app = viewModel.app ?: return
+        val series = LineGraphSeries<DataPoint>()
 
         series.title = "Player Score"
         series.color = Color.MAGENTA
@@ -136,7 +154,6 @@ class StatisticsFragment : Fragment() {
             var minScore: Long? = null
             var maxDate : java.util.Date? = null
             var minDate : java.util.Date? = null
-
 
             // Add scores to graph
             for (score in sortedScores){

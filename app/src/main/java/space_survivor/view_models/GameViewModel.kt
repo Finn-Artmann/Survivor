@@ -1,13 +1,9 @@
 package space_survivor.view_models
 
 import android.app.Application
-import android.content.res.Configuration
-import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.util.DisplayMetrics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.soywiz.korge.Korge
 import com.soywiz.korge.android.KorgeAndroidView
 import space_survivor.game_data.util.CustomModule
 import space_survivor.main.MainApp
@@ -16,7 +12,7 @@ import timber.log.Timber.i
 
 class GameViewModel(var app: Application, displayMetrics: DisplayMetrics) : ViewModel() {
 
-    lateinit var customModule: CustomModule
+    var customModule: CustomModule
     lateinit var displayMetrics: DisplayMetrics
 
     init {
@@ -31,8 +27,8 @@ class GameViewModel(var app: Application, displayMetrics: DisplayMetrics) : View
 
     fun loadToolModule(korgeAndroidView: KorgeAndroidView) {
         try {
-            var width = displayMetrics.widthPixels
-            var height = displayMetrics.heightPixels
+            val width = displayMetrics.widthPixels
+            val height = displayMetrics.heightPixels
 
             customModule = CustomModule(
                 app as MainApp,
@@ -52,6 +48,12 @@ class GameViewModel(var app: Application, displayMetrics: DisplayMetrics) : View
 
     fun unloadToolModule(korgeAndroidView: KorgeAndroidView) {
         korgeAndroidView.unloadModule()
+    }
+
+    fun resetGameState(){
+        val app = app as MainApp
+        app.gameState = null
+        app.resetGame = true
     }
 }
 

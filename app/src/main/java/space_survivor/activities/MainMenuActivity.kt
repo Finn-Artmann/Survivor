@@ -8,15 +8,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import space_survivor.databinding.ActivityMainMenuBinding
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.shape.CornerFamily
 import com.squareup.picasso.Picasso
 import space_survivor.R
 import space_survivor.main.MainApp
@@ -59,14 +55,16 @@ class MainMenuActivity : AppCompatActivity() {
             if(previousDestination?.id != null){
                 when (destination.id) {
                     R.id.mainMenuFragment, R.id.gameFragment -> {
-                        if (previousDestination?.id != R.id.mainMenuFragment &&
-                            previousDestination?.id != R.id.gameFragment) {
+                        if ((previousDestination.id != R.id.mainMenuFragment) &&
+                            (previousDestination.id != R.id.gameFragment)
+                        ) {
                             animateToolbarUp()
                         }
                     }
                     else -> {
-                        if (previousDestination?.id == R.id.mainMenuFragment ||
-                            previousDestination?.id == R.id.gameFragment) {
+                        if ((previousDestination.id == R.id.mainMenuFragment) ||
+                            (previousDestination.id == R.id.gameFragment)
+                        ) {
                             animateToolbarDown()
                         }
                     }
@@ -83,7 +81,7 @@ class MainMenuActivity : AppCompatActivity() {
     private fun updateNavDrawer(){
         val menu = binding.navView.menu
 
-        var app = application as MainApp
+        val app = application as MainApp
         val loggedIn = app.account != null
 
         // Update header
