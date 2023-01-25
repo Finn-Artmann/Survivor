@@ -25,7 +25,7 @@ The game is developed in Kotlin using the KorGE (https://korge.org/) as game eng
 - Healthbar which follows player and displays current health
 - Collision with enemies causes player to slow down and plays a damage sound
 - Timer which displays game time 
-- Current waver and amount of enemies in this wave gets displayed
+- Current wave and amount of enemies in this wave gets displayed
 - Spaceship of player looks more and more damaged as players health is decreased
 - Supports portrait and landscape mode
 - Different enemy types: standard (moves straight to it's goal) and hunters (move to it's goal and try to catch player)
