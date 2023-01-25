@@ -67,3 +67,13 @@ The game is developed in Kotlin using the KorGE (https://korge.org/) as game eng
 	Follow on YouTube and Twitter for updates:
 	https://www.youtube.com/c/FoozleCC
 	http://twitter.com/FoozleCC
+	
+# Further References
+
+- For implementing the Google Login/Logout with Firebase I followed this guide: https://medium.com/swlh/google-login-and-logout-in-android-with-firebase-kotlin-implementation-73cf6a5a989e
+
+- For game spesific implementations I used the KorGE documentation: https://docs.korge.org/korge/ (Note: This project uses KorGE 2.7.0 because in the released newer verions there were regressions regarding the infinite tilemap which I needed to use; Source: I contacted the soywiz, the auther of the engine / one of the developers on the official discord channel)
+
+- Here are also useful examples for using KorGE: https://github.com/korlibs/korge-samples
+
+
