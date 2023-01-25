@@ -13,6 +13,7 @@ import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
 import space_survivor.game_data.*
+import space_survivor.game_data.util.GameState
 
 import space_survivor.game_data.util.WaveGenerator
 import space_survivor.game_data.views.Enemy
@@ -32,21 +33,32 @@ class GameScene(var app: MainApp) : Scene() {
     private lateinit var timerText: Text
     lateinit var backgroundMusic: SoundChannel
     private lateinit var gameOverOverlay: GameOverOverlay
-    private lateinit var score : ScoreModel
+    private lateinit var score: ScoreModel
 
 
-    private val enemies: MutableList<Enemy> = mutableListOf()
+    private var enemies: MutableList<Enemy> = mutableListOf()
     private val cleanupDist = 1000.0
-    private val waveGen = WaveGenerator(this, enemies)
+    private var waveGen = WaveGenerator(this, enemies)
     private var timer = 0.minutes
     var backgroundSpeed = 10.0
     var gameOver = false
 
 
-
     override suspend fun Container.sceneInit() {
 
-        var tileset = TileSet(
+        app.resetGame = false
+        if (app.gameState != null) {
+            loadGameState(app.gameState!!)
+        } else {
+
+            player = Player().apply { scale = 1.5 }
+            player.loadPlayer(
+                1.0 + views.virtualWidth / 2,
+                146.0, views.virtualWidth, views.virtualHeight
+            )
+        }
+
+        val tileset = TileSet(
             intMapOf(
                 0 to TileSetTileInfo(0, bitmap("bg49.png").slice()),
                 1 to TileSetTileInfo(1, bitmap("bg56.png").slice()),
@@ -61,19 +73,15 @@ class GameScene(var app: MainApp) : Scene() {
 
         )
 
-        player = Player().apply { scale = 1.5 }
-        player.loadPlayer(
-            1.0 + views.virtualWidth / 2,
-            146.0, views.virtualWidth, views.virtualHeight
-        )
+
         addChild(player)
 
 
-        infoText = text("-").position(25, 50).apply { smoothing = false; textSize = 20.0 }.apply { scale = 2.0 }
-        timerText = text("$timer").position((views.virtualWidth / 2 ), 50).centerXOnStage().apply {textSize = 50.0; scale = 1.5}
+        infoText = text("-").position(25, 50).apply { smoothing = false; textSize = 20.0 }
+            .apply { scale = 2.0 }
+        timerText = text("$timer").position((views.virtualWidth / 2), 50).centerXOnStage()
+            .apply { textSize = 50.0; scale = 1.5 }
         //Set timer text to always be in foreground (in front of enemies) with KorGE
-
-
 
 
         gameOverOverlay = GameOverOverlay(sceneContainer) {
@@ -81,26 +89,29 @@ class GameScene(var app: MainApp) : Scene() {
         }
         addChild(gameOverOverlay)
 
+
         addTouchGamepad(
             views.virtualWidth.toDouble(), views.virtualHeight.toDouble(),
-            onStick = { x, y -> player.moveX = x; player.moveY= y }
+            onStick = { x, y -> player.moveX = x; player.moveY = y },
+            app = app
         )
-        addUpdater{ update(it) }
+
+        addUpdater { update(it) }
 
     }
 
     override suspend fun sceneAfterInit() {
         super.sceneAfterInit()
-        backgroundMusic =  resourcesVfs["DeepSpaceA.mp3"].readMusic().playForever()
+        backgroundMusic = resourcesVfs["DeepSpaceA.mp3"].readMusic().playForever()
 
     }
 
-    private fun update(dt : TimeSpan){
+    private fun update(dt: TimeSpan) {
 
-        if(gameOver) return
+        if (gameOver) return
 
         // Check if player is dead
-        if (player.state == Player.State.DEAD){
+        if (player.state == Player.State.DEAD) {
 
             gameOver = true
             backgroundMusic.stop()
@@ -111,28 +122,39 @@ class GameScene(var app: MainApp) : Scene() {
 
                 // Get current date and time as string
                 val date = DateTime.nowLocal().toString("yyyy-MM-dd HH:mm:ss")
-                score = ScoreModel("0", app.account?.displayName.toString(), timer.millisecondsLong, date)
+                score = ScoreModel(
+                    "0",
+                    app.account?.displayName.toString(),
+                    timer.millisecondsLong,
+                    date
+                )
                 app.scores.create(score)
             }
 
             launchImmediately { gameOverOverlay.load() }
         }
 
-        playerMovementUpdate(dt)
+        playerMovementUpdate()
 
 
         // Change background music when waveGen reached specific waves to indicate difficulty increase
-        if ( waveGen.checkNextWave(dt)) {
+        if (waveGen.checkNextWave(dt)) {
 
-            when(waveGen.waveNumber){
+            when (waveGen.waveNumber) {
                 20 -> {
                     backgroundMusic.stop()
-                    launch { backgroundMusic =  resourcesVfs["DubStepDropBoom.mp3"].readMusic().playForever() }
+                    launch {
+                        backgroundMusic =
+                            resourcesVfs["DubStepDropBoom.mp3"].readMusic().playForever()
+                    }
                 }
 
                 30 -> {
                     backgroundMusic.stop()
-                    launch { backgroundMusic =  resourcesVfs["DynamicFight_1.mp3"].readMusic().playForever() }
+                    launch {
+                        backgroundMusic =
+                            resourcesVfs["DynamicFight_1.mp3"].readMusic().playForever()
+                    }
                 }
             }
 
@@ -142,17 +164,17 @@ class GameScene(var app: MainApp) : Scene() {
 
         // Update timer
         timer += dt
-        timerText.setText("${ISO8601.TIME_LOCAL_COMPLETE.format(timer)}")
+        timerText.setText(ISO8601.TIME_LOCAL_COMPLETE.format(timer))
         timerText.centerXOnStage()
 
     }
 
 
-    private fun playerMovementUpdate(dt: TimeSpan){
-
+    private fun playerMovementUpdate() {
         //joystick_text.setText("Stick: (${player.moveX.toStringDecimal(2)}, ${player.moveY.toStringDecimal(2)})")
 
-        backgroundSpeed = if(player.colliding) 0.1 else 10.0 // Slow down background / player when colliding
+        backgroundSpeed =
+            if (player.colliding) 0.1 else 10.0 // Slow down background / player when colliding
 
         launchImmediately(views.coroutineContext) {
 
@@ -161,20 +183,20 @@ class GameScene(var app: MainApp) : Scene() {
             enemies.forEach { enemy ->
 
                 // despawn enemy if out of view
-                if (enemy.x < -200 || enemy.x > views.virtualWidth+200 || enemy.y < -200 || enemy.y > views.virtualHeight+200){
-                    enemy.despawn{ enemies.remove(enemy) }
+                if (enemy.x < -200 || enemy.x > views.virtualWidth + 200 || enemy.y < -200 || enemy.y > views.virtualHeight + 200) {
+                    enemy.despawn { enemies.remove(enemy) }
                 }
 
                 // Hunter type enemies will chase the player
                 // They still move in a random direction but will be attracted to the player
-                if(enemy.type == Enemy.Type.HUNTER){
+                if (enemy.type == Enemy.Type.HUNTER) {
                     enemy.hunt(player.x, player.y)
                 }
 
                 enemy.x -= player.moveX * backgroundSpeed
                 enemy.y -= player.moveY * backgroundSpeed
 
-                if(enemy.goalPoint != null){
+                if (enemy.goalPoint != null) {
                     enemy.goalPoint!!.x -= player.moveX * backgroundSpeed
                     enemy.goalPoint!!.y -= player.moveY * backgroundSpeed
 
@@ -185,5 +207,63 @@ class GameScene(var app: MainApp) : Scene() {
 
     }
 
+
+    override suspend fun sceneDestroy() {
+        super.sceneDestroy()
+
+        if(app.resetGame) {
+            app.gameState = null
+            return
+        }
+
+        // Save game state to object
+        val gameState = GameState(
+            player,
+            waveGen,
+            timer,
+            gameOver
+        )
+
+        app.gameState = gameState
+
+    }
+
+    private suspend fun loadGameState(gameState: GameState) {
+        player = Player().apply { scale = 1.5 }
+        waveGen.waveNumber = gameState.waveGen.waveNumber
+        waveGen.enemiesPerWave = gameState.waveGen.enemiesPerWave
+
+        timer = gameState.timer
+        gameOver = gameState.gameOver
+
+        player.loadPlayer(
+            1.0 + views.virtualWidth / 2,
+            146.0, views.virtualWidth, views.virtualHeight
+        )
+        player.moveSpeed = gameState.player.moveSpeed
+        player.state = gameState.player.state
+        player.health = gameState.player.health
+        player.maxHealth = gameState.player.maxHealth
+
+        /* All enemies have been destroyed,
+            so we need to spawn the current wave multiple times to balance the game.
+
+           While it is possible to save the enemies and their state, spawning them correctly
+           is difficult since we have to take the original orientation of the device and
+           the resulting virtual width and height into account.
+       */
+        val enemiesPerWave = waveGen.enemiesPerWave
+        for (i in 0 until 3) {
+            waveGen.spawnEnemies(enemiesPerWave, Enemy.Type.DEFAULT, 5.0)
+        }
+
+    }
+
 }
+
+
+
+
+
+
 

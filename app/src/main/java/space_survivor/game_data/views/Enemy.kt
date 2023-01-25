@@ -10,7 +10,7 @@ import com.soywiz.korma.geom.*
 import kotlin.math.*
 import com.soywiz.korma.geom.Angle
 
-class Enemy : Container(){
+class Enemy() : Container(){
 
     enum class Type{
         DEFAULT,
