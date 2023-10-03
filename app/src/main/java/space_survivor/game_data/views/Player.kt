@@ -32,16 +32,16 @@ class Player(private val sceneView: Container) : Container(){
     private lateinit var slightDamage: Image
     private lateinit var damaged: Image
     private lateinit var veryDamaged: Image
-    lateinit var moveSound: Sound
-    lateinit var damageSound: Sound
+    private lateinit var moveSound: Sound
+    private lateinit var damageSound: Sound
     lateinit var state: State
-    lateinit var healthBar: HealthBar
+    private lateinit var healthBar: HealthBar
 
     private var damageCoroutine: Deferred<Unit>? = null
     private var damageSoundCoroutine: Deferred<Unit>? = null
 
 
-    var hitRadius = 10.0
+    private var hitRadius = 10.0
     var moveSpeed = 300.0
     var moveX = 0.0
     var moveY = 0.0
@@ -147,9 +147,9 @@ class Player(private val sceneView: Container) : Container(){
         state = State.IDLE
     }
 
-    fun takeDamage(damage: Double) {
+    private fun takeDamage(damage: Double) {
 
-        if (state != State.IDLE) return;
+        if (state != State.IDLE) return
         state = State.DAMAGED
 
         healthBar.setHealth(health, maxHealth)
@@ -193,7 +193,7 @@ class Player(private val sceneView: Container) : Container(){
 
     }
 
-    fun shootBullet() {
+    private fun shootBullet() {
         i("Player.kt: shootBullet() called")
 
         val bullet = Bullet()
@@ -202,7 +202,7 @@ class Player(private val sceneView: Container) : Container(){
 
     }
 
-    fun die() {
+    private fun die() {
         state = State.DEAD
         damageSoundCoroutine?.cancel()
         launch(GlobalScope.coroutineContext) {
@@ -214,7 +214,7 @@ class Player(private val sceneView: Container) : Container(){
 
     }
 
-    fun setDamageImage(){
+    private fun setDamageImage(){
 
         var healthPercentage = health / maxHealth
 
@@ -248,7 +248,7 @@ class Player(private val sceneView: Container) : Container(){
 
     fun isMoving() : Boolean{
 
-        return moveX != 0.0 || moveY != 0.0;
+        return moveX != 0.0 || moveY != 0.0
     }
 
 
