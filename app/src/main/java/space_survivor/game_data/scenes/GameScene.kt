@@ -16,6 +16,7 @@ import space_survivor.game_data.*
 import space_survivor.game_data.util.GameState
 
 import space_survivor.game_data.util.WaveGenerator
+import space_survivor.game_data.views.Bullet
 import space_survivor.game_data.views.Enemy
 import space_survivor.game_data.views.GameOverOverlay
 import space_survivor.game_data.views.Player
@@ -35,9 +36,7 @@ class GameScene(var app: MainApp) : Scene() {
     private lateinit var gameOverOverlay: GameOverOverlay
     private lateinit var score: ScoreModel
 
-
     private var enemies: MutableList<Enemy> = mutableListOf()
-    private val cleanupDist = 1000.0
     private var waveGen = WaveGenerator(this, enemies)
     private var timer = 0.minutes
     var backgroundSpeed = 10.0
@@ -51,7 +50,7 @@ class GameScene(var app: MainApp) : Scene() {
             loadGameState(app.gameState!!)
         } else {
 
-            player = Player().apply { scale = 1.5 }
+            player = Player(sceneView).apply { scale = 1.5 }
             player.loadPlayer(
                 1.0 + views.virtualWidth / 2,
                 146.0, views.virtualWidth, views.virtualHeight
@@ -60,8 +59,7 @@ class GameScene(var app: MainApp) : Scene() {
 
         val tileset = TileSet(
             intMapOf(
-                0 to TileSetTileInfo(0, bitmap("bg49.png").slice()),
-                1 to TileSetTileInfo(1, bitmap("bg56.png").slice()),
+                0 to TileSetTileInfo(0, bitmap("bg1.png").slice())
             )
         )
 
@@ -75,6 +73,7 @@ class GameScene(var app: MainApp) : Scene() {
 
 
         addChild(player)
+        addChild(player.bullet)
 
 
         infoText = text("-").position(25, 50).apply { smoothing = false; textSize = 20.0 }
@@ -180,6 +179,26 @@ class GameScene(var app: MainApp) : Scene() {
 
             tilemap.x += -player.moveX * backgroundSpeed
             tilemap.y += -player.moveY * backgroundSpeed
+
+            val numBullets = sceneView.numChildren
+            val bullets = ArrayList<Bullet>()
+            for (i in 0 until numBullets) {
+                val bullet = sceneView.getChildAt(i) as? Bullet
+                if (bullet != null) {
+                    bullets.add(bullet)
+                }
+            }
+
+            bullets.forEach() { bullet ->
+                bullet.x -= player.moveX * backgroundSpeed
+                bullet.y -= player.moveY * backgroundSpeed
+
+                if (bullet.x < -200 || bullet.x > views.virtualWidth + 200 || bullet.y < -200 || bullet.y > views.virtualHeight + 200) {
+
+                    sceneView.removeChild(bullet)
+                }
+            }
+
             enemies.forEach { enemy ->
 
                 // despawn enemy if out of view
@@ -229,7 +248,7 @@ class GameScene(var app: MainApp) : Scene() {
     }
 
     private suspend fun loadGameState(gameState: GameState) {
-        player = Player().apply { scale = 1.5 }
+        player = Player(sceneView).apply { scale = 1.5 }
         waveGen.waveNumber = gameState.waveGen.waveNumber
         waveGen.enemiesPerWave = gameState.waveGen.enemiesPerWave
 

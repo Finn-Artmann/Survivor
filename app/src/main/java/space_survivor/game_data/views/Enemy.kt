@@ -2,6 +2,7 @@ package space_survivor.game_data.views
 
 
 import com.soywiz.klock.*
+import com.soywiz.korge.time.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korio.file.std.*
@@ -9,6 +10,12 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korma.geom.*
 import kotlin.math.*
 import com.soywiz.korma.geom.Angle
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.soywiz.korge.tween.*
+import com.soywiz.korma.interpolation.Easing
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 class Enemy() : Container(){
 
@@ -72,6 +79,9 @@ class Enemy() : Container(){
 
             moveInGoalDirection()
 
+            if(health <= 0){
+                die()
+            }
         }
 
     }
@@ -96,6 +106,16 @@ class Enemy() : Container(){
         rotation(Angle.fromRadians(atan2(dist.x, -dist.y)))
         x += dist.normalized.x * moveSpeed
         y += dist.normalized.y * moveSpeed
+    }
+
+    fun die(){
+
+        // Play death animation and despawn on completion
+        GlobalScope.launch {
+            tween(this@Enemy::scale[0.1], time = .5.seconds, easing = Easing.EASE_IN_OUT)
+            delay(.5.seconds)
+            despawn {}
+        }
     }
 
     fun despawn(onDespawn: () -> Unit){
