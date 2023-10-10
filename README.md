@@ -1,79 +1,62 @@
 # Space Survivor
 
+![Developed in Kotlin](https://img.shields.io/badge/Developed%20in-Kotlin-purple.svg)
+![Built in IntelliJ](https://img.shields.io/badge/Built%20in-IntelliJ-blue.svg)
 
-Space Survivor is a simple android game where the goal is to survive as long as possible while evading alien spaceships.
+*Space Survivor* is an Android game designed for those who crave the thrill of surviving in the depths of space while evading relentless alien spaceships.
 
-The game is developed in Kotlin using the KorGE (https://korge.org/) as game engine and embedded into an android app.
- 
+<p align="center">
+    <br>
+    <img width="150" src="app/src/main/space_survivor_icon-playstore.png" alt="App icon"  />
+    <br>
+</p>
+
+## Features
+
+### User Management and Data Tracking
+
+- **Leaderboard**: Compete with players worldwide and see if you can make it to the top 100.
+- **Google Authentication**: Sign in to save your scores to a Firebase Realtime Database.
+- **Statistics**: Keep track of your score history with the zoom-in and zoom-out functionality.
+- **Interactive Statistics**: Click on specific data points in the statistics page to view more information.
+- **User Notifications**: Receive prompts to log in when trying to access your statistics without being logged in.
+- **Intuitive Navigation**: Navigate seamlessly with a dynamic NavDrawer and menu items that adapt to your current status (logged in or not).
+
+### Custom Animations and Visuals
+
+- **Transitions**: Enjoy smooth custom transition animations between fragments.
+- **Toolbar Animation**: Experience a unique animation for revealing and hiding the toolbar.
+- **Custom Backgrounds**: Immerse yourself in the game's atmosphere with specially crafted backgrounds for the main menu, statistics page, and leaderboard.
+
+### Game-specific Features
+
+- **Dynamic Environment**: Experience an infinitely repeating background that adds depth to the gameplay.
+- **Healthbar**: Keep an eye on your health as it dynamically follows your character and displays your current status.
+- **Collision Effects**: Engage in intense gameplay as collisions with enemies cause your character to slow down and play a damage sound.
+- **Timer**: Race against the clock with a timer displaying your game time.
+- **Wave Updates**: Stay informed about the current wave and the number of enemies in each wave.
+- **Damage Effects**: Witness your spaceship becoming increasingly damaged as your health depletes.
+- **Responsive Design**: Play comfortably in both portrait and landscape modes.
+- **Enemy Variety**: Encounter different enemy types, including standard (moves straight to its goal) and hunters (pursue and attempt to catch the player).
+- **Progressive Stages**:
+    1. **First Stage**: Face standard enemies.
+    2. **Second Stage**:
+        - Encounter a mix of standard and hunter enemies.
+        - Experience a musical cue to signal the start of the next stage.
+    3. **Third Stage**:
+        - Challenge yourself with standard and hunter enemies.
+        - Hear a distinct musical cue as you enter the third stage.
+        - Battle enemies with increased speed.
+
+# License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENCE](LICENCE.md) file for details.
 
 
-# Features
-
-- Leaderboard listing the global Top 100 players
-- Signed in player's (via Google Authentication) scores get saved to a Firebase Realtime-Database
-- Players can track their score history on the statistics page
-- Statistics page has zoom out functionality
-- Specific data points in statistics page can be clicked on to display information about it
-- App notifies user he needs to log in if he is not logged in and tries to view his statistics
-- Alternative navigation methods: NavDrawer, menu items dynamically adjust depending which fragment the user currently sees and depending on if the user is logged in or not 
-- Custom transition animations between fragments
-- Custom animation for revealing and hiding toolbar
-- Custom created backgrounds for main menu, statistics page, and leaderboard 
-
-**Game specific features:**
-- Infinitely repeating background
-- Healthbar which follows player and displays current health
-- Collision with enemies causes player to slow down and plays a damage sound
-- Timer which displays game time 
-- Current wave and amount of enemies in this wave gets displayed
-- Spaceship of player looks more and more damaged as players health is decreased
-- Supports portrait and landscape mode
-- Different enemy types: standard (moves straight to it's goal) and hunters (moves to it's goal and tries to catch player)
-- Enemy waves get automatically generated
-- Different stages as the game progresses: 
-	1. **First stage:** Standard enemies
-	2. **Second stage:** 
-			- Standard enemies and hunter enemies
-			- New music stars to signal the player the next stage started
-	3. **Third stage:**  
-			- Standard enemies and hunter enemies
-			- New music stars to signal the player the next stage started
-			- enemies have increased speed 
-
-
-# Credits Game Assets (Incomplete)
-
-
-			------------------------------	
-	
-	Void - Main Ship (1.0)
-
-	Commissioned from: Baldur (https://twitter.com/the__baldur)
-	Distributed by Foozle (www.foozle.io)
-
-			------------------------------
-
-	License: (Creative Commons Zero, CC0)
-	http://creativecommons.org/publicdomain/zero/1.0/
-
-	This content is free to use and modify for all projects, including commercial projects.
-	Attribution not required.  If you would like to support, consider a voluntary donation.
-
-			------------------------------
-
-	Donate:   https://foozlecc.itch.io/
-	Patreon:  https://www.patreon.com/bePatron?u=48464594
-
-	Follow on YouTube and Twitter for updates:
-	https://www.youtube.com/c/FoozleCC
-	http://twitter.com/FoozleCC
-	
 # Further References
 
-- For implementing the Google Login/Logout with Firebase I followed this guide: https://medium.com/swlh/google-login-and-logout-in-android-with-firebase-kotlin-implementation-73cf6a5a989e
+For implementing Google Login/Logout with Firebase, follow this [comprehensive guide](https://medium.com/swlh/google-login-and-logout-in-android-with-firebase-kotlin-implementation-73cf6a5a989e).
 
-- For game spesific implementations I used the KorGE documentation: https://docs.korge.org/korge/ (Note: This project uses KorGE 2.7.0 because in the released newer versions there were regressions regarding the infinite tilemap which I needed to use; Source: I contacted the soywiz, the auther of the engine / one of the developers on the official discord channel)
+For game-specific implementations, refer to the [KorGE documentation](https://docs.korge.org/korge/). Note that this project uses KorGE 2.7.0 due to regressions in newer versions (source: contact with the author on the official Discord channel).
 
-- Here are also useful examples for using KorGE: https://github.com/korlibs/korge-samples
-
-
+Explore useful examples for using KorGE in the [KorGE Samples repository](https://github.com/korlibs/korge-samples).
