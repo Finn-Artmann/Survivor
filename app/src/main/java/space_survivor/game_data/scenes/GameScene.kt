@@ -101,7 +101,7 @@ class GameScene(var app: MainApp) : Scene() {
 
     override suspend fun sceneAfterInit() {
         super.sceneAfterInit()
-        backgroundMusic = resourcesVfs["DeepSpaceA.mp3"].readMusic().playForever()
+        backgroundMusic = resourcesVfs["ruskerdax_-_savage_ambush.mp3"].readMusic().playForever()
 
     }
 
@@ -144,7 +144,7 @@ class GameScene(var app: MainApp) : Scene() {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
-                            resourcesVfs["DubStepDropBoom.mp3"].readMusic().playForever()
+                            resourcesVfs["ruskerdax_-_open_warfare.mp3"].readMusic().playForever()
                     }
                 }
 
@@ -152,7 +152,7 @@ class GameScene(var app: MainApp) : Scene() {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
-                            resourcesVfs["DynamicFight_1.mp3"].readMusic().playForever()
+                            resourcesVfs["Caves.ogg"].readMusic().playForever()
                     }
                 }
             }
