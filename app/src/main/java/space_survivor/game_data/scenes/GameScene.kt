@@ -201,9 +201,16 @@ class GameScene(var app: MainApp) : Scene() {
 
             enemies.forEach { enemy ->
 
+                // kill enemy if health is 0
+                if (enemy.health <= 0) {
+                    enemy.die {
+                        sceneView.removeChild(enemy)
+                    }
+                }
+
                 // despawn enemy if out of view
                 if (enemy.x < -200 || enemy.x > views.virtualWidth + 200 || enemy.y < -200 || enemy.y > views.virtualHeight + 200) {
-                    enemy.despawn { enemies.remove(enemy) }
+                    sceneView.removeChild(enemy)
                 }
 
                 // Hunter type enemies will chase the player

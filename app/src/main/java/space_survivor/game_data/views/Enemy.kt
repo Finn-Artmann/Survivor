@@ -27,6 +27,7 @@ class Enemy() : Container(){
     enum class State{
         ACTIVE,
         SPAWNING,
+        DYING
     }
 
     private lateinit var idle: Image
@@ -79,9 +80,6 @@ class Enemy() : Container(){
 
             moveInGoalDirection()
 
-            if(health <= 0){
-                die()
-            }
         }
 
     }
@@ -108,19 +106,16 @@ class Enemy() : Container(){
         y += dist.normalized.y * moveSpeed
     }
 
-    fun die(){
+    fun die(onDie: () -> Unit){
 
-        // Play death animation and despawn on completion
+        state = State.DYING
+        // Play death animation and execute onDie() when done
         GlobalScope.launch {
             tween(this@Enemy::scale[0.1], time = .5.seconds, easing = Easing.EASE_IN_OUT)
-            delay(.5.seconds)
-            despawn {}
+        }.invokeOnCompletion {
+            onDie()
         }
     }
 
-    fun despawn(onDespawn: () -> Unit){
-        removeChildren()
-        removeFromParent()
-    }
 
 }

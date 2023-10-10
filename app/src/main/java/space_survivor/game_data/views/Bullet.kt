@@ -39,4 +39,5 @@ class Bullet : Container() {
             }
         }
     }
+
 }
