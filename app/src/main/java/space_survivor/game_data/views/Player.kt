@@ -1,6 +1,7 @@
 package space_survivor.game_data.views
 
 
+import com.soywiz.klock.milliseconds
 import com.soywiz.klock.seconds
 import com.soywiz.korau.sound.*
 import com.soywiz.korge.tween.get
@@ -18,7 +19,7 @@ import kotlin.math.atan2
 
 
 
-class Player : Container(){
+class Player(private val sceneView: Container) : Container(){
 
     enum class State{
         IDLE,
@@ -31,16 +32,16 @@ class Player : Container(){
     private lateinit var slightDamage: Image
     private lateinit var damaged: Image
     private lateinit var veryDamaged: Image
-    lateinit var moveSound: Sound
-    lateinit var damageSound: Sound
+    private lateinit var moveSound: Sound
+    private lateinit var damageSound: Sound
     lateinit var state: State
-    lateinit var healthBar: HealthBar
+    private lateinit var healthBar: HealthBar
 
     private var damageCoroutine: Deferred<Unit>? = null
     private var damageSoundCoroutine: Deferred<Unit>? = null
 
 
-    var hitRadius = 10.0
+    private var hitRadius = 10.0
     var moveSpeed = 300.0
     var moveX = 0.0
     var moveY = 0.0
@@ -49,7 +50,10 @@ class Player : Container(){
     private val fieldMargin = 150
     var colliding = false
 
+    var bullet = Bullet()
+
     suspend fun loadPlayer(initialXPos: Double, initialYPos: Double, virtWidth: Int, virtHeight: Int) {
+        i("Player.kt: loadPlayer() called")
         position(initialXPos, initialYPos)
         state = State.IDLE
 
@@ -90,11 +94,13 @@ class Player : Container(){
             takeDamage(6.0)
             moveSpeed = 50.0
             colliding = true
-        }
 
-        hitCircle.onCollisionExit(filter = { it != this && it is Circle}) {
-            moveSpeed = 300.0
-            colliding = false
+            // reset speed and collision after 0.2 seconds
+            GlobalScope.launch {
+                delay(200.milliseconds)
+                moveSpeed = 300.0
+                colliding = false
+            }
         }
 
         addUpdater {
@@ -123,6 +129,10 @@ class Player : Container(){
             }
         }
 
+        addFixedUpdater(1.seconds){
+            shootBullet()
+        }
+
 
         addChild(fullHealth)
         addChild(slightDamage)
@@ -137,9 +147,9 @@ class Player : Container(){
         state = State.IDLE
     }
 
-    fun takeDamage(damage: Double) {
+    private fun takeDamage(damage: Double) {
 
-        if (state != State.IDLE) return;
+        if (state != State.IDLE) return
         state = State.DAMAGED
 
         healthBar.setHealth(health, maxHealth)
@@ -183,7 +193,16 @@ class Player : Container(){
 
     }
 
-    fun die() {
+    private fun shootBullet() {
+        i("Player.kt: shootBullet() called")
+
+        val bullet = Bullet()
+        sceneView.addChild(bullet)
+        GlobalScope.launch { bullet.loadBullet(x, y, rotation) }
+
+    }
+
+    private fun die() {
         state = State.DEAD
         damageSoundCoroutine?.cancel()
         launch(GlobalScope.coroutineContext) {
@@ -195,7 +214,7 @@ class Player : Container(){
 
     }
 
-    fun setDamageImage(){
+    private fun setDamageImage(){
 
         var healthPercentage = health / maxHealth
 
@@ -229,7 +248,7 @@ class Player : Container(){
 
     fun isMoving() : Boolean{
 
-        return moveX != 0.0 || moveY != 0.0;
+        return moveX != 0.0 || moveY != 0.0
     }
 
 
