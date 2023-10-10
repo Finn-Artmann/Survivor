@@ -47,6 +47,16 @@
         - Challenge yourself with standard and hunter enemies.
         - Hear a distinct musical cue as you enter the third stage.
         - Battle enemies with increased speed.
+      
+# Impressions
+Here are some screenshots from the game:
+<div style="display: flex; justify-content: space-between;">
+    <img width="230" src="Img/Surv_main.jpg" alt="Main Menu" />
+    <img width="230" src="Img/Surv_Stats.jpg" alt="Statistics" />
+    <img width="230" src="Img/Surv_Game.jpg" alt="Gameplay" />
+    <img width="230" src="Img/Surv_Leaderboard.jpg" alt="Leaderboard" />
+</div>
+
 
 # License
 
