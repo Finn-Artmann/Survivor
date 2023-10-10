@@ -101,7 +101,7 @@ class GameScene(var app: MainApp) : Scene() {
 
     override suspend fun sceneAfterInit() {
         super.sceneAfterInit()
-        backgroundMusic = resourcesVfs["DeepSpaceA.mp3"].readMusic().playForever()
+        backgroundMusic = resourcesVfs["ruskerdax_-_savage_ambush.mp3"].readMusic().playForever()
 
     }
 
@@ -140,11 +140,11 @@ class GameScene(var app: MainApp) : Scene() {
         if (waveGen.checkNextWave(dt)) {
 
             when (waveGen.waveNumber) {
-                20 -> {
+                15 -> {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
-                            resourcesVfs["DubStepDropBoom.mp3"].readMusic().playForever()
+                            resourcesVfs["ruskerdax_-_open_warfare.mp3"].readMusic().playForever()
                     }
                 }
 
@@ -152,7 +152,7 @@ class GameScene(var app: MainApp) : Scene() {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
-                            resourcesVfs["DynamicFight_1.mp3"].readMusic().playForever()
+                            resourcesVfs["Caves.mp3"].readMusic().playForever()
                     }
                 }
             }
@@ -201,9 +201,14 @@ class GameScene(var app: MainApp) : Scene() {
 
             enemies.forEach { enemy ->
 
+                // kill enemy if health is 0
+                if (enemy.health <= 0) {
+                    enemy.die()
+                }
+
                 // despawn enemy if out of view
                 if (enemy.x < -200 || enemy.x > views.virtualWidth + 200 || enemy.y < -200 || enemy.y > views.virtualHeight + 200) {
-                    enemy.despawn { enemies.remove(enemy) }
+                    sceneView.removeChild(enemy)
                 }
 
                 // Hunter type enemies will chase the player

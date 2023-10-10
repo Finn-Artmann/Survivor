@@ -3,6 +3,7 @@ package space_survivor.game_data.util
 import com.soywiz.klock.*
 import com.soywiz.korau.sound.readSound
 import com.soywiz.korge.scene.*
+import com.soywiz.korio.async.delay
 import com.soywiz.korma.geom.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,13 +46,13 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
                 enenmyCountIncrement = 3
                 enemiesPerWave+=enenmyCountIncrement
             }
-            else if(waveNumber >= 20){
+            else if(waveNumber >= 15){
 
                 // Spawn random amount of hunters, max 20 % of the wave
                 var hunterCount = Random.nextInt(0,  ceil(enemiesPerWave * 0.2).toInt())
                 spawnEnemies(hunterCount, Enemy.Type.HUNTER)
                 spawnEnemies(enemiesPerWave - hunterCount, Enemy.Type.DEFAULT)
-                enenmyCountIncrement = 2
+                enenmyCountIncrement = 1
                 enemiesPerWave+=enenmyCountIncrement
             }
             else{
@@ -70,7 +71,7 @@ class WaveGenerator(var scene: Scene, var enemies: MutableList<Enemy>) {
         CoroutineScope(scene.coroutineContext).launch {
 
             for (i in 0..count) {
-                //delay(Random.nextLong(0, maxWaveLength))
+
                 enemies.add(i, Enemy())
 
                 val points = generateEnemyPoints()

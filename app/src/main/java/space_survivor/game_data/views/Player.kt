@@ -32,7 +32,6 @@ class Player(private val sceneView: Container) : Container(){
     private lateinit var slightDamage: Image
     private lateinit var damaged: Image
     private lateinit var veryDamaged: Image
-    private lateinit var moveSound: Sound
     private lateinit var damageSound: Sound
     lateinit var state: State
     private lateinit var healthBar: HealthBar
@@ -57,8 +56,7 @@ class Player(private val sceneView: Container) : Container(){
         position(initialXPos, initialYPos)
         state = State.IDLE
 
-        damageSound = resourcesVfs["destroyed_stones.mp3"].readSound()
-        moveSound = resourcesVfs["mystic.mp3"].readSound()
+        damageSound = resourcesVfs["explosion2.mp3"].readSound()
         fullHealth = Image(
             resourcesVfs["Main Ship - Base - Full health.png"].readBitmap(),
             smoothing = false,

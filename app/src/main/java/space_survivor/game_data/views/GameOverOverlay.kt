@@ -20,7 +20,7 @@ class GameOverOverlay(val sceneContainer: SceneContainer, val onRestart: () -> U
 
     suspend fun load(){
 
-        gameOverSound = resourcesVfs["gameover_loud.mp3"].readSound().play()
+        gameOverSound = resourcesVfs["SpaceShip4.mp3"].readSound().play()
 
         backgound = solidRect(
             sceneContainer.views.virtualWidth,

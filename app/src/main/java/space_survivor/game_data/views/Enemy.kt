@@ -16,6 +16,7 @@ import com.soywiz.korge.tween.*
 import com.soywiz.korma.interpolation.Easing
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 class Enemy() : Container(){
 
@@ -27,6 +28,7 @@ class Enemy() : Container(){
     enum class State{
         ACTIVE,
         SPAWNING,
+        DYING
     }
 
     private lateinit var idle: Image
@@ -75,13 +77,11 @@ class Enemy() : Container(){
         addChild(idle)
 
         state = State.ACTIVE
+
         addUpdater {
 
             moveInGoalDirection()
 
-            if(health <= 0){
-                die()
-            }
         }
 
     }
@@ -109,18 +109,17 @@ class Enemy() : Container(){
     }
 
     fun die(){
-
-        // Play death animation and despawn on completion
+        state = State.DYING
+        // Play death animation and execute onDie() when done
         GlobalScope.launch {
             tween(this@Enemy::scale[0.1], time = .5.seconds, easing = Easing.EASE_IN_OUT)
-            delay(.5.seconds)
-            despawn {}
+        }.invokeOnCompletion {
+            removeFromParent()
         }
     }
 
-    fun despawn(onDespawn: () -> Unit){
-        removeChildren()
+    fun despawn(){
+        if (state == State.DYING) return
         removeFromParent()
     }
-
 }
