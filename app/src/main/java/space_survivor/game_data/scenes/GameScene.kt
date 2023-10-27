@@ -203,7 +203,7 @@ class GameScene(var app: MainApp) : Scene() {
 
                 // kill enemy if health is 0
                 if (enemy.health <= 0) {
-                    enemy.die()
+                   launch { enemy.die() }
                 }
 
                 // despawn enemy if out of view

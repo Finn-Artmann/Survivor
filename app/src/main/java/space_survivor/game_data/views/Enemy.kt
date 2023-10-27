@@ -2,6 +2,7 @@ package space_survivor.game_data.views
 
 
 import com.soywiz.klock.*
+import com.soywiz.korge.animate.animate
 import com.soywiz.korge.time.delay
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
@@ -10,12 +11,12 @@ import com.soywiz.korim.format.readBitmap
 import com.soywiz.korma.geom.*
 import kotlin.math.*
 import com.soywiz.korma.geom.Angle
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import com.soywiz.korge.tween.*
+import com.soywiz.korio.async.launchImmediately
 import com.soywiz.korma.interpolation.Easing
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
+import timber.log.Timber
+import timber.log.Timber.i
 import kotlin.random.Random
 
 class Enemy() : Container(){
@@ -43,6 +44,10 @@ class Enemy() : Container(){
     var hitCircle = circle{ radius = hitRadius; fill = Colors.RED}
 
 
+    lateinit var piece1: Image
+    lateinit var piece2: Image
+    lateinit var piece3: Image
+
 
     suspend fun loadEnemy(point: Point, enemyType: Type = Type.DEFAULT, speed: Double = 40.0) {
 
@@ -52,6 +57,10 @@ class Enemy() : Container(){
         state = State.SPAWNING
         type = enemyType
         moveSpeed = speed
+
+        piece1 = Image(resourcesVfs["piece1.png"].readBitmap(), smoothing = false, anchorX = .5, anchorY = .5)
+        piece2 = Image(resourcesVfs["piece2.png"].readBitmap(), smoothing = false, anchorX = .5, anchorY = .5)
+        piece3 = Image(resourcesVfs["piece3.png"].readBitmap(), smoothing = false, anchorX = .5, anchorY = .5)
 
         if(enemyType == Type.DEFAULT){
             idle = Image(
@@ -108,14 +117,53 @@ class Enemy() : Container(){
         y += dist.normalized.y * moveSpeed
     }
 
-    fun die(){
+     suspend fun die(){
+        if(state == State.DYING) return
         state = State.DYING
-        // Play death animation and execute onDie() when done
-        GlobalScope.launch {
-            tween(this@Enemy::scale[0.1], time = .5.seconds, easing = Easing.EASE_IN_OUT)
-        }.invokeOnCompletion {
-            removeFromParent()
-        }
+         animate {
+
+             // death animation
+             addChild(piece1)
+             addChild(piece2)
+             addChild(piece3)
+             removeChild(idle)
+
+            val randAngle1 = Random.nextDouble(-PI, PI)
+            val randAngle2 = Random.nextDouble(-PI, PI)
+            val randAngle3 = Random.nextDouble(-PI, PI)
+
+            val randDist1 = Random.nextDouble(-100.00, 100.0)
+            val randDist2 = Random.nextDouble(-100.00, 100.0)
+            val randDist3 = Random.nextDouble(-100.00, 100.0)
+
+             val randDist4 = Random.nextDouble(-100.00, 100.0)
+                val randDist5 = Random.nextDouble(-100.00, 100.0)
+                val randDist6 = Random.nextDouble(-100.00, 100.0)
+
+             parallel {
+                 tween(piece1::x[randDist1], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece1::y[randDist4], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece1::rotation[Angle(randAngle1)], time = 1.seconds, easing = Easing.EASE_IN_OUT)
+                 tween(piece1::scale[0.0], time = 1.seconds, easing = Easing.EASE_IN_OUT)
+
+                 tween(piece2::x[randDist2], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece2::y[randDist5], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece2::rotation[Angle(randAngle2)], time = 1.seconds, easing = Easing.EASE_OUT_QUAD)
+                 tween(piece2::scale[0.0], time = 1.seconds, easing = Easing.EASE_IN_OUT)
+
+                 tween(piece3::y[randDist3], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece3::x[randDist6], time = 1.seconds, easing = Easing.EASE_OUT_ELASTIC)
+                 tween(piece3::rotation[Angle(randAngle3)], time = 1.seconds, easing = Easing.EASE_IN_OUT)
+                 tween(piece3::scale[0.0], time = 1.seconds, easing = Easing.EASE_IN_OUT)
+             }
+
+
+
+         }
+
+        i("xtxr Enemy.kt: die() called")
+        removeFromParent()
+
     }
 
     fun despawn(){
