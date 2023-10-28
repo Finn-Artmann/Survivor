@@ -14,6 +14,7 @@ import com.soywiz.korio.async.*
 import com.soywiz.korma.geom.Angle
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import timber.log.Timber.i
 import kotlin.math.atan2
 
@@ -33,6 +34,7 @@ class Player(private val sceneView: Container) : Container(){
     private lateinit var damaged: Image
     private lateinit var veryDamaged: Image
     private lateinit var damageSound: Sound
+    private val fieldMargin = 150
     lateinit var state: State
     lateinit var healthBar: HealthBar
 
@@ -44,12 +46,15 @@ class Player(private val sceneView: Container) : Container(){
     var moveSpeed = 300.0
     var moveX = 0.0
     var moveY = 0.0
-    var health = 100.0
-    var maxHealth = 100.0
-    private val fieldMargin = 150
     var colliding = false
 
-    var bullet = Bullet()
+    // Stats
+    var health = 100.0
+    var maxHealth = 100.0
+    var bulletDamageMul = 1.0
+    var bulletSpeedMul = 1.0
+
+
 
     suspend fun loadPlayer(initialXPos: Double, initialYPos: Double, virtWidth: Int, virtHeight: Int) {
         i("Player.kt: loadPlayer() called")
@@ -128,7 +133,10 @@ class Player(private val sceneView: Container) : Container(){
         }
 
         addFixedUpdater(1.seconds){
-            shootBullet()
+            GlobalScope.launch {
+                shootBullet()
+            }
+
         }
 
 
@@ -191,13 +199,12 @@ class Player(private val sceneView: Container) : Container(){
 
     }
 
-    private fun shootBullet() {
+    private suspend fun shootBullet() {
         i("Player.kt: shootBullet() called")
 
-        val bullet = Bullet()
+        val bullet = Bullet(bulletDamageMul, bulletSpeedMul)
         sceneView.addChild(bullet)
-        GlobalScope.launch { bullet.loadBullet(x, y, rotation) }
-
+        bullet.loadBullet(x, y, rotation)
     }
 
     private fun die() {

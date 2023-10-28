@@ -41,7 +41,7 @@ class GameScene(var app: MainApp) : Scene() {
     var status = GameState.Status.RUNNING
     private var kills = 0
     private var killLastUpgrade = 0
-    private var killsToUpgrade = 10
+    private var killsToUpgrade = 1
 
 
     override suspend fun Container.sceneInit() {
@@ -74,7 +74,6 @@ class GameScene(var app: MainApp) : Scene() {
 
 
         addChild(player)
-        addChild(player.bullet)
 
 
         infoText = text("-").position(25, 50).apply { smoothing = false; textSize = 20.0 }
@@ -164,7 +163,7 @@ class GameScene(var app: MainApp) : Scene() {
                     }
                 }
 
-                30 -> {
+                35 -> {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
@@ -210,45 +209,49 @@ class GameScene(var app: MainApp) : Scene() {
             }
 
             bullets.forEach() { bullet ->
-                bullet.x -= player.moveX * backgroundSpeed
-                bullet.y -= player.moveY * backgroundSpeed
+                launch {
+                    bullet.x -= player.moveX * backgroundSpeed
+                    bullet.y -= player.moveY * backgroundSpeed
 
-                if (bullet.x < -200 || bullet.x > views.virtualWidth + 200 || bullet.y < -200 || bullet.y > views.virtualHeight + 200) {
+                    if (bullet.x < -200 || bullet.x > views.virtualWidth + 200 || bullet.y < -200 || bullet.y > views.virtualHeight + 200) {
 
-                    sceneView.removeChild(bullet)
+                        sceneView.removeChild(bullet)
+                    }
                 }
             }
 
             enemies.forEach { enemy ->
+                launch {
+                     enemy.moveInGoalDirection()
 
-                launch { enemy.moveInGoalDirection() }
+                    // kill enemy if health is 0
+                    if (enemy.health <= 0) {
+                         enemy.die { kills++ }
+                    }
 
-                // kill enemy if health is 0
-                if (enemy.health <= 0) {
-                   launch { enemy.die { kills++ } }
+                    // despawn enemy if out of view
+                    if (enemy.x < -200 || enemy.x > views.virtualWidth + 200 || enemy.y < -200 || enemy.y > views.virtualHeight + 200) {
+                        sceneView.removeChild(enemy)
+                    }
+
+                    // Hunter type enemies will chase the player
+                    // They still move in a random direction but will be attracted to the player
+                    if (enemy.type == Enemy.Type.HUNTER) {
+                        enemy.hunt(player.x, player.y)
+                    }
+
+                    enemy.x -= player.moveX * backgroundSpeed
+                    enemy.y -= player.moveY * backgroundSpeed
+
+                    if (enemy.goalPoint != null) {
+                        enemy.goalPoint!!.x -= player.moveX * backgroundSpeed
+                        enemy.goalPoint!!.y -= player.moveY * backgroundSpeed
+
+                    }
+
+                }
                 }
 
-                // despawn enemy if out of view
-                if (enemy.x < -200 || enemy.x > views.virtualWidth + 200 || enemy.y < -200 || enemy.y > views.virtualHeight + 200) {
-                    sceneView.removeChild(enemy)
-                }
-
-                // Hunter type enemies will chase the player
-                // They still move in a random direction but will be attracted to the player
-                if (enemy.type == Enemy.Type.HUNTER) {
-                    enemy.hunt(player.x, player.y)
-                }
-
-                enemy.x -= player.moveX * backgroundSpeed
-                enemy.y -= player.moveY * backgroundSpeed
-
-                if (enemy.goalPoint != null) {
-                    enemy.goalPoint!!.x -= player.moveX * backgroundSpeed
-                    enemy.goalPoint!!.y -= player.moveY * backgroundSpeed
-
-                }
-
-            }
         }
 
     }

@@ -162,6 +162,19 @@ class Enemy() : Container(){
         removeFromParent()
     }
 
+    suspend fun takeDamage(damage: Double){
+        if(state == State.DYING) return
+        health -= damage
+
+        coroutineScope {
+            launch {
+                idle.colorMul = Colors.RED
+                delay(0.1.seconds)
+                idle.colorMul = Colors.WHITE
+            }
+        }
+    }
+
     fun despawn(){
         if (state == State.DYING) return
         removeFromParent()

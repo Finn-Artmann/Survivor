@@ -3,14 +3,17 @@ package space_survivor.game_data.views
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.Colors
 import com.soywiz.korma.geom.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.cos
 import kotlin.math.sin
 import timber.log.Timber.i
 
-class Bullet : Container() {
+class Bullet(var damageMultiplier: Double = 1.0, var bulletSpeedMultiplier: Double = 1.0) : Container() {
 
-    var damage = 100.0
-    var bulletspeed = 30.0
+    private var damage = 50.0 * damageMultiplier
+    private var bulletspeed = 10.0 * bulletSpeedMultiplier
     suspend fun loadBullet(x: Double, y: Double, rotation: Angle){
         i("Bullet created at $x, $y")
 
@@ -33,7 +36,9 @@ class Bullet : Container() {
             i("Bullet collided with $other")
 
             if (other is Enemy) {
-                other.health -= damage
+                GlobalScope.launch {
+                    other.takeDamage(damage)
+                }
                 i("Enemy health: ${other.health}")
                 this.removeFromParent()
             }

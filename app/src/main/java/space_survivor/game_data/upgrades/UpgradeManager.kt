@@ -7,8 +7,9 @@ class UpgradeManager(private val player: Player, private val upgradeMenu: Upgrad
 
     private val availableUpgrades = listOf(
         HealthUpgrade(player),
-        SpeedUpgrade(player)
-
+        SpeedUpgrade(player),
+        BulletDamageUpgrade(player),
+        BulletSpeedUpgrade(player)
     )
     fun selectRandomUpgrades(numUpgrades: Int = 3){
         val randomUpgrades = availableUpgrades.shuffled().take(numUpgrades)
