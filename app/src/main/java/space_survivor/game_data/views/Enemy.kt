@@ -87,11 +87,6 @@ class Enemy() : Container(){
 
         state = State.ACTIVE
 
-        addUpdater {
-
-            moveInGoalDirection()
-
-        }
 
     }
 
@@ -101,7 +96,7 @@ class Enemy() : Container(){
         rotation(Angle.fromRadians(atan2(initialDistToGoal.x, -initialDistToGoal.y)))
     }
 
-    private fun moveInGoalDirection(){
+    suspend fun moveInGoalDirection(){
 
         if(goalPoint == null) return
 

@@ -34,7 +34,7 @@ class Player(private val sceneView: Container) : Container(){
     private lateinit var veryDamaged: Image
     private lateinit var damageSound: Sound
     lateinit var state: State
-    private lateinit var healthBar: HealthBar
+    lateinit var healthBar: HealthBar
 
     private var damageCoroutine: Deferred<Unit>? = null
     private var damageSoundCoroutine: Deferred<Unit>? = null
@@ -212,7 +212,7 @@ class Player(private val sceneView: Container) : Container(){
 
     }
 
-    private fun setDamageImage(){
+     fun setDamageImage(){
 
         var healthPercentage = health / maxHealth
 

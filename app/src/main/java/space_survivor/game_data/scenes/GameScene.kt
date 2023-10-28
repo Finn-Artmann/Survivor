@@ -13,13 +13,11 @@ import com.soywiz.korim.bitmap.*
 
 import com.soywiz.korio.async.*
 import space_survivor.game_data.*
+import space_survivor.game_data.upgrades.UpgradeManager
 import space_survivor.game_data.util.GameState
 
 import space_survivor.game_data.util.WaveGenerator
-import space_survivor.game_data.views.Bullet
-import space_survivor.game_data.views.Enemy
-import space_survivor.game_data.views.GameOverOverlay
-import space_survivor.game_data.views.Player
+import space_survivor.game_data.views.*
 import space_survivor.main.MainApp
 import space_survivor.models.ScoreModel
 
@@ -40,7 +38,7 @@ class GameScene(var app: MainApp) : Scene() {
     private var waveGen = WaveGenerator(this, enemies)
     private var timer = 0.minutes
     var backgroundSpeed = 10.0
-    var gameOver = false
+    var status = GameState.Status.RUNNING
 
 
     override suspend fun Container.sceneInit() {
@@ -86,7 +84,7 @@ class GameScene(var app: MainApp) : Scene() {
         gameOverOverlay = GameOverOverlay(sceneContainer) {
             launchImmediately { sceneContainer.changeTo<GameScene>() }
         }
-        addChild(gameOverOverlay)
+        sceneView.addChild(gameOverOverlay)
 
 
         addTouchGamepad(
@@ -107,12 +105,18 @@ class GameScene(var app: MainApp) : Scene() {
 
     private fun update(dt: TimeSpan) {
 
-        if (gameOver) return
+        when (status) {
+            GameState.Status.RUNNING -> runningUpdate(dt)
+            GameState.Status.PAUSED -> return
+            GameState.Status.GAME_OVER -> return
+        }
+    }
 
+    private fun runningUpdate(dt:TimeSpan){
         // Check if player is dead
         if (player.state == Player.State.DEAD) {
 
-            gameOver = true
+            status = GameState.Status.GAME_OVER
             backgroundMusic.stop()
 
             // Check if player is logged in and if so, save score
@@ -139,7 +143,10 @@ class GameScene(var app: MainApp) : Scene() {
         // Change background music when waveGen reached specific waves to indicate difficulty increase
         if (waveGen.checkNextWave(dt)) {
 
+            if(waveGen.waveNumber % 2 == 0) showUpgradeSelection()
+
             when (waveGen.waveNumber) {
+
                 15 -> {
                     backgroundMusic.stop()
                     launch {
@@ -201,6 +208,8 @@ class GameScene(var app: MainApp) : Scene() {
 
             enemies.forEach { enemy ->
 
+                launch { enemy.moveInGoalDirection() }
+
                 // kill enemy if health is 0
                 if (enemy.health <= 0) {
                    launch { enemy.die() }
@@ -245,7 +254,7 @@ class GameScene(var app: MainApp) : Scene() {
             player,
             waveGen,
             timer,
-            gameOver
+            GameState.Status.GAME_OVER
         )
 
         app.gameState = gameState
@@ -258,7 +267,7 @@ class GameScene(var app: MainApp) : Scene() {
         waveGen.enemiesPerWave = gameState.waveGen.enemiesPerWave
 
         timer = gameState.timer
-        gameOver = gameState.gameOver
+        status = gameState.status
 
         player.loadPlayer(
             1.0 + views.virtualWidth / 2,
@@ -281,6 +290,14 @@ class GameScene(var app: MainApp) : Scene() {
             waveGen.spawnEnemies(enemiesPerWave, Enemy.Type.DEFAULT, 5.0)
         }
 
+    }
+
+    private fun showUpgradeSelection() {
+        status = GameState.Status.PAUSED
+        val upgradeMenu = UpgradeMenu(this)
+        val upgradeManager = UpgradeManager(player, upgradeMenu)
+        upgradeManager.selectRandomUpgrades()
+        upgradeMenu.createUpgradeView()
     }
 
 }
