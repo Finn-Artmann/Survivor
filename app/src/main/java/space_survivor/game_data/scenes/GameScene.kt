@@ -39,6 +39,9 @@ class GameScene(var app: MainApp) : Scene() {
     private var timer = 0.minutes
     var backgroundSpeed = 10.0
     var status = GameState.Status.RUNNING
+    private var kills = 0
+    private var killLastUpgrade = 0
+    private var killsToUpgrade = 10
 
 
     override suspend fun Container.sceneInit() {
@@ -139,11 +142,17 @@ class GameScene(var app: MainApp) : Scene() {
 
         playerMovementUpdate()
 
+        // Open upgrade menu when player reaches specific kills
+        if (kills >= (killLastUpgrade + killsToUpgrade)) {
+            showUpgradeSelection()
+            killsToUpgrade += 1
+            killLastUpgrade = kills
+        }
+
 
         // Change background music when waveGen reached specific waves to indicate difficulty increase
         if (waveGen.checkNextWave(dt)) {
 
-            if(waveGen.waveNumber % 2 == 0) showUpgradeSelection()
 
             when (waveGen.waveNumber) {
 
@@ -166,7 +175,11 @@ class GameScene(var app: MainApp) : Scene() {
 
         }
 
-        infoText.setText("\tWave:\t${waveGen.waveNumber}\n\tEnemies:\t${waveGen.enemiesPerWave}")
+        infoText.setText("" +
+                "\tWave:\t${waveGen.waveNumber}\n" +
+                "\tEnemies:\t${waveGen.enemiesPerWave}\n" +
+                "\tKills:\t$kills\n" +
+                "\tKills to next upgrade:\t${killsToUpgrade - (kills - killLastUpgrade)}")
 
         // Update timer
         timer += dt
@@ -212,7 +225,7 @@ class GameScene(var app: MainApp) : Scene() {
 
                 // kill enemy if health is 0
                 if (enemy.health <= 0) {
-                   launch { enemy.die() }
+                   launch { enemy.die { kills++ } }
                 }
 
                 // despawn enemy if out of view

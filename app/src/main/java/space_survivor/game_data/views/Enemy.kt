@@ -112,9 +112,10 @@ class Enemy() : Container(){
         y += dist.normalized.y * moveSpeed
     }
 
-     suspend fun die(){
+     suspend fun die(onDie: () -> Unit = {}){
         if(state == State.DYING) return
         state = State.DYING
+         onDie()
          animate {
 
              // death animation
@@ -157,8 +158,8 @@ class Enemy() : Container(){
          }
 
         i("xtxr Enemy.kt: die() called")
-        removeFromParent()
 
+        removeFromParent()
     }
 
     fun despawn(){
