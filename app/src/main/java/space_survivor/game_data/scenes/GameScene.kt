@@ -152,7 +152,7 @@ class GameScene(var app: MainApp) : Scene() {
                     backgroundMusic.stop()
                     launch {
                         backgroundMusic =
-                            resourcesVfs["Caves.mp3"].readMusic().playForever()
+                            resourcesVfs["Caves.ogg"].readMusic().playForever()
                     }
                 }
             }

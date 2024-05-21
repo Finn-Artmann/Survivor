@@ -56,7 +56,7 @@ class Player(private val sceneView: Container) : Container(){
         position(initialXPos, initialYPos)
         state = State.IDLE
 
-        damageSound = resourcesVfs["explosion2.mp3"].readSound()
+        damageSound = resourcesVfs["explosion.wav"].readSound()
         fullHealth = Image(
             resourcesVfs["Main Ship - Base - Full health.png"].readBitmap(),
             smoothing = false,
