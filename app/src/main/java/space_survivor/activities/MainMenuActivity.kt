@@ -1,6 +1,6 @@
 package space_survivor.activities
 
-
+import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
@@ -121,7 +121,7 @@ class MainMenuActivity : AppCompatActivity() {
         toolbar.visibility = View.VISIBLE
         toolbar.animate().setDuration(500).translationY(-toolbar.height.toFloat()).setListener(
             object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     toolbar.visibility = View.GONE
                 }
             })
@@ -133,7 +133,7 @@ class MainMenuActivity : AppCompatActivity() {
         toolbar.visibility = View.GONE
         toolbar.animate().setDuration(500).translationY(0f).setListener(
             object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     toolbar.visibility = View.VISIBLE
                 }
             })

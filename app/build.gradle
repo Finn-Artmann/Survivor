@@ -8,7 +8,7 @@ plugins {
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     dataBinding {
         enabled = true
@@ -16,20 +16,35 @@ android {
 
 
     defaultConfig {
-        applicationId 'com.example.space_survivor'
+        applicationId 'finn.space_survivor'
         minSdk 30
-        targetSdk 32
-        versionCode 1
+        targetSdk 33
+        versionCode 3
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'survivor-key'
+            keyPassword 'mZ%i*Q0aycM]'
+            storeFile file('/mnt/3483d24a-c56c-46fa-9b0f-290f42cebe3c/AndroidProgramming/Survivor/survivor-release-key.jks')
+            storePassword 'mZ%i*Q0aycM]'
+
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
         }
     }
     compileOptions {
