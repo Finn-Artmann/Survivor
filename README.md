@@ -49,6 +49,8 @@
         - Battle enemies with increased speed.
       
 # Impressions
+YouTube: [demo video](https://youtu.be/hx_s22ILFLM?si=Rt2soeqMiuDs8J8b)
+
 Here are some screenshots from the game:
 <div style="display: flex; justify-content: space-between;">
     <img width="230" src="Img/Surv_main.jpg" alt="Main Menu" />
